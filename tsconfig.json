@@ -9,7 +9,6 @@
     "paths": {
       "@shared*": ["./shared/src/index"]
     },
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
