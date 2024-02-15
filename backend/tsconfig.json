@@ -5,10 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@shared*": ["./shared/src/index"]
-    },
+    "moduleResolution": "node",
 
     /* Linting */
     "strict": true,
@@ -16,5 +13,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "exclude": ["node_modules"]
+  "include": ["./src"],
+  "references": []
 }
