@@ -1,4 +1,5 @@
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
+import { useQuery } from "@tanstack/react-query";
 
 const discussions = [
   {
@@ -171,7 +172,22 @@ const discussions = [
   },
 ];
 
+const getDittoUrl = "https://pokeapi.co/api/v2/pokemon/ditto";
+
+const fetchFn = async (url: string) => {
+  const res = await fetch(url);
+  return res.json();
+};
+
 export const Feed = () => {
+  const { isPending, data } = useQuery({
+    queryKey: ["testQuery"],
+    queryFn: () => fetchFn(getDittoUrl),
+  });
+
+  console.log("isPending", isPending);
+  console.log("data", data);
+
   return (
     <ul role="list" className="divide-y divide-gray-100">
       {discussions.map((discussion) => (
