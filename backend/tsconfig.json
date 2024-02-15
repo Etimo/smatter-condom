@@ -3,7 +3,8 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "moduleResolution":"Node"
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["./dist/*", "../../node_modules"],
