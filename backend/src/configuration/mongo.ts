@@ -1,12 +1,12 @@
-import mongoose, { ConnectOptions } from "mongoose";
-const uri = process.env.MONGO_DB_CONNECTION_STRING ?? "";
-const opts:ConnectOptions =  {
-};
+import mongoose from "mongoose";
+//const uri = process.env.MONGO_DB_CONNECTION_STRING ?? "";
 
+export const connectDb = async (connectionString:string) => {
+console.log("Connectiong to", connectionString)
 const connection = await mongoose.connect(
-    uri,
-    opts
+    connectionString
    );
+return connection;
+}
 
 
-export default connection;
