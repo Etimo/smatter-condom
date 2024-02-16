@@ -4,7 +4,7 @@ export const UserSchema = z.object({
   id: z.string().uuid(),
   username: z.string(),
   email: z.string().email(),
-  profilePictureUrl: z.string().url(),
+  profilePictureUrl: z.string().url().optional(),
 });
 
 export type UserDto = z.infer<typeof UserSchema>;
