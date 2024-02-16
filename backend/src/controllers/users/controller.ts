@@ -1,6 +1,6 @@
 import bodyParser from "body-parser";
 import { Request, Response, Router } from "express";
-import { mapToNewUser, save } from "../../repository";
+import { UserRepository } from "../../repository";
 import { validate } from "../validate";
 import { NewUserSchema, UserDto } from "./types";
 
@@ -11,6 +11,9 @@ export const createUserRoutes = (): Router => {
 
   userRouter.get("/", (req: Request, res: Response) => {
     console.log("req", req);
+
+    const users = UserRepository.getAll();
+
     res.send("This is not a user");
   });
 
@@ -21,7 +24,9 @@ export const createUserRoutes = (): Router => {
       throw new Error(JSON.stringify(validationResult.errors));
     }
 
-    const saveResult = await save(mapToNewUser(validationResult.result));
+    const saveResult = await UserRepository.save(
+      UserRepository.mapToNew(validationResult.result)
+    );
 
     const resultDto: UserDto = {
       id: saveResult._id.toString(),
