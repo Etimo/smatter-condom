@@ -1,7 +1,10 @@
+import bodyParser from "body-parser";
 import { Request, Response, Router } from "express";
 import { mapToNewUser, save } from "../../repository";
 import { validate } from "../validate";
 import { NewUserSchema, UserDto } from "./types";
+
+const jsonParser = bodyParser.json();
 
 export const createUserRoutes = (): Router => {
   const userRouter = Router();
@@ -11,7 +14,7 @@ export const createUserRoutes = (): Router => {
     res.send("This is not a user");
   });
 
-  userRouter.post("/", async (req: Request, res: Response) => {
+  userRouter.post("/", jsonParser, async (req: Request, res: Response) => {
     const validationResult = validate(req.body, NewUserSchema);
 
     if (!validationResult.success) {
