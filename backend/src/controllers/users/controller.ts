@@ -1,7 +1,7 @@
 import bodyParser from "body-parser";
 import { Request, Response, Router } from "express";
 import { UserRepository } from "../../repository";
-import { validate } from "../validate";
+import { validateRequest } from "../validate";
 import { NewUserSchema, UserDto } from "./types";
 
 const jsonParser = bodyParser.json();
@@ -9,16 +9,23 @@ const jsonParser = bodyParser.json();
 export const createUserRoutes = (): Router => {
   const userRouter = Router();
 
-  userRouter.get("/", (req: Request, res: Response) => {
-    console.log("req", req);
+  userRouter.get("/", async (req: Request, res: Response) => {
+    const users = await UserRepository.getAll();
 
-    const users = UserRepository.getAll();
+    const userDtos = users.map((user) => {
+      return {
+        id: user._id.toString(),
+        email: user.email,
+        username: user.username,
+        profilePictureUrl: user.profilePictureUrl,
+      };
+    });
 
-    res.send("This is not a user");
+    res.send(userDtos);
   });
 
   userRouter.post("/", jsonParser, async (req: Request, res: Response) => {
-    const validationResult = validate(req.body, NewUserSchema);
+    const validationResult = validateRequest(req.body, NewUserSchema);
 
     if (!validationResult.success) {
       throw new Error(JSON.stringify(validationResult.errors));

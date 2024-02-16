@@ -1,5 +1,5 @@
-import { NewUserDto } from "../controllers/users/types";
-import { IUser, User } from "../model/user";
+import { NewUserDto } from "../../controllers/users/types";
+import { IUser, User } from "../../model/user";
 
 const mapToNew = (user: NewUserDto): IUser => {
   return new User(user);

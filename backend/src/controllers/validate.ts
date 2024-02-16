@@ -4,7 +4,7 @@ type Error = {
   message: string;
 };
 
-export const validate = <T>(
+export const validateRequest = <T>(
   body: any,
   schema: ZodSchema<T>
 ): { success: boolean } & (
