@@ -1,47 +1,47 @@
 import bodyParser from "body-parser";
 import { Request, Response, Router } from "express";
 import { PostRepository } from "../../repository";
+import { validateRequest } from "../validate";
+import { NewPostSchema, PostDto } from "./types";
 
 const jsonParser = bodyParser.json();
 
 export const createPostRoutes = (): Router => {
   const postRouter = Router();
 
-  postRouter.get("/", async (req: Request, res: Response) => {
+  postRouter.get("/", jsonParser, async (req: Request, res: Response) => {
+    console.log("req", req.body);
     const posts = await PostRepository.getAll();
+    const postDtos: PostDto[] = posts.map((user) => {
+      return {
+        id: user._id.toString(),
+        content: user.content,
+        authorId: user.authorId.toString(),
+      };
+    });
 
-    // const postDtos = posts.map((user) => {
-    //   return {
-    //     id: user._id.toString(),
-    //     email: user.email,
-    //     username: user.username,
-    //     profilePictureUrl: user.profilePictureUrl,
-    //   };
-    // });
-
-    res.send({});
+    res.send(postDtos);
   });
 
-  // postRouter.post("/", jsonParser, async (req: Request, res: Response) => {
-  //   const validationResult = validateRequest(req.body, NewUserSchema);
+  postRouter.post("/", jsonParser, async (req: Request, res: Response) => {
+    const validationResult = validateRequest(req.body, NewPostSchema);
 
-  //   if (!validationResult.success) {
-  //     throw new Error(JSON.stringify(validationResult.errors));
-  //   }
+    if (!validationResult.success) {
+      throw new Error(JSON.stringify(validationResult.errors));
+    }
 
-  //   const saveResult = await UserRepository.save(
-  //     UserRepository.mapToNew(validationResult.result)
-  //   );
+    const saveResult = await PostRepository.save(
+      PostRepository.mapToNew(validationResult.result)
+    );
 
-  //   const resultDto: UserDto = {
-  //     id: saveResult._id.toString(),
-  //     email: saveResult.email,
-  //     username: saveResult.username,
-  //     profilePictureUrl: saveResult.profilePictureUrl,
-  //   };
+    const resultDto: PostDto = {
+      id: saveResult._id.toString(),
+      content: saveResult.content,
+      authorId: "",
+    };
 
-  //   res.send(resultDto);
-  // });
+    res.send(resultDto);
+  });
 
   return postRouter;
 };

@@ -1,5 +1,6 @@
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
+import { Api } from "../api";
 
 const discussions = [
   {
@@ -172,17 +173,16 @@ const discussions = [
   },
 ];
 
-const getDittoUrl = "https://pokeapi.co/api/v2/pokemon/ditto";
-
 const fetchFn = async (url: string) => {
   const res = await fetch(url);
   return res.json();
 };
 
 export const Feed = () => {
-  const { isPending, data } = useQuery({
-    queryKey: ["testQuery"],
-    queryFn: () => fetchFn(getDittoUrl),
+  const { url, type, key } = Api.posts.get;
+  const { isPending, data } = useQuery<typeof type>({
+    queryKey: [key],
+    queryFn: () => fetchFn(url()),
   });
 
   console.log("isPending", isPending);

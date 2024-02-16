@@ -1,6 +1,5 @@
-import { StartedMongoDBContainer } from "@testcontainers/mongodb";
 import { connectDb } from "./mongo";
-let mongodbContainer: StartedMongoDBContainer;
+// let mongodbContainer: StartedMongoDBContainer;
 beforeAll(async () => {
   /**
    * Note: Until I can fix testcontainers we can use a single testdb started by "npm run testdb"

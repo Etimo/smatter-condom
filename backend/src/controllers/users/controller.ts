@@ -10,6 +10,7 @@ export const createUserRoutes = (): Router => {
   const userRouter = Router();
 
   userRouter.get("/", async (req: Request, res: Response) => {
+    console.log("req", req.body);
     const users = await UserRepository.getAll();
 
     const userDtos = users.map((user) => {

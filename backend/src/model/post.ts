@@ -7,7 +7,7 @@ type IPost = {
 
 const postSchema = new Schema<IPost>({
   content: { type: String, required: true },
-  authorId: { type: "ObjectID", required: false },
+  authorId: { type: Schema.Types.ObjectId, required: false },
 });
 
 const Post = model<IPost>("Post", postSchema);

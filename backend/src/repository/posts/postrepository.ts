@@ -1,8 +1,10 @@
+import { NewPostDto } from "../../controllers";
 import { IPost, Post } from "../../model/post";
 
-// const mapToNew = (user: NewUserDto): IPost => {
-//   return new User(user);
-// };
+const mapToNew = (post: NewPostDto): IPost => {
+  console.log("post", post);
+  return new Post(post);
+};
 
 const save = async (post: IPost) => {
   const mongoDoc = new Post(post);
@@ -14,4 +16,4 @@ const getAll = async () => {
   return posts;
 };
 
-export const PostRepository = { getAll, save };
+export const PostRepository = { mapToNew, getAll, save };

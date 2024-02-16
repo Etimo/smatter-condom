@@ -1,11 +1,17 @@
-// export const UserSchema = z.object({
-//   id: z.string().uuid(),
-//   username: z.string(),
-//   email: z.string().email(),
-//   profilePictureUrl: z.string().url().optional(),
-// });
+import { z } from "zod";
+import { isObjectId } from "../../utils";
 
-// export type UserDto = z.infer<typeof UserSchema>;
+export const PostSchema = z.object({
+  id: z
+    .string()
+    .refine((id) => isObjectId(id), { message: "Invalid ObjectId" }),
+  content: z.string(),
+  authorId: z
+    .string()
+    .refine((id) => isObjectId(id), { message: "Invalid ObjectId" }),
+});
 
-// export const NewUserSchema = UserSchema.omit({ id: true });
-// export type NewUserDto = z.infer<typeof NewUserSchema>;
+export type PostDto = z.infer<typeof PostSchema>;
+
+export const NewPostSchema = PostSchema.omit({ id: true });
+export type NewPostDto = z.infer<typeof NewPostSchema>;

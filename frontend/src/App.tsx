@@ -1,4 +1,3 @@
-import "./App.css";
 import { Feed, Navbar, PostPost } from "./components";
 
 const App = () => {
