@@ -10,7 +10,6 @@ export const createPostRoutes = (): Router => {
   const postRouter = Router();
 
   postRouter.get("/", jsonParser, async (req: Request, res: Response) => {
-    console.log("req", req.body);
     const posts = await PostRepository.getAll();
     const postDtos: PostDto[] = posts.map((user) => {
       return {

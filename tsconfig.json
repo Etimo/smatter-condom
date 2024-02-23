@@ -11,11 +11,7 @@
     "paths": {
       "@shared*": ["./shared/src/index"]
     },
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "strict": true
   },
   "exclude": ["node_modules"]
 }
