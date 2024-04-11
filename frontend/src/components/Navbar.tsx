@@ -1,7 +1,7 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
-import { classNames } from "../utils";
+import { cn } from "../utils";
 
 const user = {
   name: "Tom Cook",
@@ -41,11 +41,11 @@ export const Navbar = () => {
                       <a
                         key={item.name}
                         href={item.href}
-                        className={classNames(
-                          item.current
-                            ? "bg-indigo-700 text-white"
-                            : "text-white hover:bg-indigo-500 hover:bg-opacity-75",
-                          "rounded-md py-2 px-3 text-sm font-medium"
+                        className={cn(
+                          "rounded-md py-2 px-3 text-sm font-medium text-white hover:bg-indigo-500 hover:bg-opacity-75",
+                          {
+                            '"bg-indigo-700 text-white"': item.current,
+                          }
                         )}
                         aria-current={item.current ? "page" : undefined}
                       >
@@ -106,9 +106,11 @@ export const Navbar = () => {
                             {({ active }) => (
                               <a
                                 href={item.href}
-                                className={classNames(
-                                  active ? "bg-gray-100" : "",
-                                  "block px-4 py-2 text-sm text-gray-700"
+                                className={cn(
+                                  "block px-4 py-2 text-sm text-gray-700",
+                                  {
+                                    "bg-gray-100": active,
+                                  }
                                 )}
                               >
                                 {item.name}
@@ -131,11 +133,11 @@ export const Navbar = () => {
                   key={item.name}
                   as="a"
                   href={item.href}
-                  className={classNames(
-                    item.current
-                      ? "bg-indigo-700 text-white"
-                      : "text-white hover:bg-indigo-500 hover:bg-opacity-75",
-                    "block rounded-md py-2 px-3 text-base font-medium"
+                  className={cn(
+                    "block rounded-md py-2 px-3 text-base font-medium text-white hover:bg-indigo-500 hover:bg-opacity-75",
+                    {
+                      "bg-indigo-700 text-white": item.current,
+                    }
                   )}
                   aria-current={item.current ? "page" : undefined}
                 >

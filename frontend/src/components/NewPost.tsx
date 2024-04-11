@@ -1,7 +1,13 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Endpoints } from "../api";
 
 export const PostPost = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: Endpoints.posts.create.request,
+  });
+
   const {
     register,
     handleSubmit,
@@ -10,9 +16,8 @@ export const PostPost = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     console.log("data", data);
-    const res = await Endpoints.posts.create.request({
-      ...data,
-    });
+    await mutation.mutateAsync(data);
+    queryClient.invalidateQueries({ queryKey: Endpoints.posts.get.key });
   });
 
   return (

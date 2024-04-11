@@ -17,7 +17,7 @@ export const createPostRoutes = (): Router => {
         return {
           id: user._id.toString(),
           content: user.content,
-          authorId: user.authorId.toString(),
+          // authorId: user.authorId.toString(),
         };
       });
 

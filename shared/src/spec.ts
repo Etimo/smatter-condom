@@ -1,4 +1,4 @@
-// not important, just here to test imports!
+// Reflects the types of the api
 
 export type User = {
   id: string;
@@ -8,9 +8,8 @@ export type User = {
 
 export type Post = {
   id: string;
-  title: string;
   content: string;
-  authorId: string;
+  // authorId: string;
 };
 
 export type NewPost = Pick<Post, "content">;
