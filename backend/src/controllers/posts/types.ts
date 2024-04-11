@@ -8,10 +8,11 @@ export const PostSchema = z.object({
   content: z.string(),
   authorId: z
     .string()
-    .refine((id) => isObjectId(id), { message: "Invalid ObjectId" }),
+    .refine((id) => isObjectId(id), { message: "Invalid ObjectId" })
+    .optional(),
 });
 
 export type PostDto = z.infer<typeof PostSchema>;
 
-export const NewPostSchema = PostSchema.omit({ id: true });
-export type NewPostDto = z.infer<typeof NewPostSchema>;
+export const NewPostDtoSchema = PostSchema.omit({ id: true, authorId: true });
+export type NewPostDto = z.infer<typeof NewPostDtoSchema>;

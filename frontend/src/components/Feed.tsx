@@ -1,6 +1,5 @@
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
-import { useQuery } from "@tanstack/react-query";
-import { Api } from "../api";
+import { Endpoints, useSmatterQuery } from "../api";
 
 const discussions = [
   {
@@ -173,18 +172,8 @@ const discussions = [
   },
 ];
 
-const fetchFn = async (url: string) => {
-  const res = await fetch(url);
-  return res.json();
-};
-
 export const Feed = () => {
-  const { url, type, key } = Api.posts.get;
-  const { isPending, data } = useQuery<typeof type>({
-    queryKey: [key],
-    queryFn: () => fetchFn(url()),
-  });
-
+  const { isPending, data } = useSmatterQuery(Endpoints.posts.get);
   console.log("isPending", isPending);
   console.log("data", data);
 

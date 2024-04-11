@@ -13,6 +13,8 @@ export type Post = {
   authorId: string;
 };
 
+export type NewPost = Pick<Post, "content">;
+
 export type Comment = {
   id: string;
   content: string;

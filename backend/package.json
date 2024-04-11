@@ -10,7 +10,7 @@
     "compile": "npx tsc",
     "server": "nodemon --watch src -e \".ts\" --exec \"npm run compile\"",
     "testdb": "docker run -e MONGO_INITDB_ROOT_USERNAME=fake -e MONGO_INITDB_ROOT_PASSWORD=fake -p 27024:27017 mongo",
-    "database": "docker run -e MONGO_INITDB_ROOT_USERNAME=fake -e MONGO_INITDB_ROOT_PASSWORD=fake -p 27019:27017 mongo",
+    "database": "docker run -e MONGO_INITDB_ROOT_USERNAME=fake -e MONGO_INITDB_ROOT_PASSWORD=fake -p 27019:27017 mongo > /dev/null 2>&1",
     "dev": "concurrently \"npm run server\" \"nodemon --watch dist dist/index.js\" \"npm run database\""
   },
   "author": "",

@@ -1,10 +1,19 @@
-import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { Endpoints } from "../api";
 
 export const PostPost = () => {
-  const onPost = () => {
-    console.log("this is not yet implemented!");
-    toast.error("Not yet implemented!");
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<{ content: string }>();
+
+  const onSubmit = handleSubmit(async (data) => {
+    console.log("data", data);
+    const res = await Endpoints.posts.create.request({
+      ...data,
+    });
+  });
 
   return (
     <div className="flex items-start space-x-4 bg-white rounded-md p-6 my-6 shadow-md">
@@ -16,20 +25,19 @@ export const PostPost = () => {
         />
       </div>
       <div className="min-w-0 flex-1">
-        <form onSubmit={onPost} className="relative">
+        <form onSubmit={onSubmit} className="relative">
           <div className="overflow-hidden rounded-lg shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
             <label htmlFor="comment" className="sr-only">
               Make a post...
             </label>
             <textarea
               rows={3}
-              name="comment"
               id="comment"
               className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
               placeholder="Make a post..."
               defaultValue={""}
-            />
-
+              {...register("content")}
+            />{" "}
             {/* Spacer element to match the height of the toolbar */}
             <div className="py-2" aria-hidden="true">
               {/* Matches height of button in toolbar (1px border + 36px content height) */}
@@ -38,6 +46,7 @@ export const PostPost = () => {
               </div>
             </div>
           </div>
+          {errors.content && <p>{errors.content.message}</p>}
 
           <div className="absolute inset-x-0 bottom-0 flex justify-end py-2 pl-3 pr-2">
             <div className="flex-shrink-0">

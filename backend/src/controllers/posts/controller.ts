@@ -1,8 +1,10 @@
 import { Request, Response, Router } from "express";
 import { requestHandler } from "../../controller-function";
+import { ApiError } from "../../errors";
+import { Post } from "../../model/post";
 import { PostRepository } from "../../repository";
 import { validateRequest } from "../validate";
-import { NewPostSchema, PostDto } from "./types";
+import { NewPostDtoSchema, PostDto } from "./types";
 
 export const createPostRoutes = (): Router => {
   const postRouter = Router();
@@ -26,20 +28,26 @@ export const createPostRoutes = (): Router => {
   postRouter.post(
     "/",
     requestHandler(async (req: Request, res: Response) => {
-      const validationResult = validateRequest(req.body, NewPostSchema);
+      const validationResult = validateRequest(req.body, NewPostDtoSchema);
+
+      console.log("validationResult", validationResult);
 
       if (!validationResult.success) {
-        throw new Error(JSON.stringify(validationResult.errors));
+        throw new ApiError("bad-request");
       }
 
-      const saveResult = await PostRepository.save(
-        PostRepository.mapToNew(validationResult.result)
-      );
+      const newPost = new Post({
+        ...validationResult.result,
+        //  authorId: "123"
+      });
+      const saveResult = await PostRepository.save(newPost);
+
+      console.log("saveResult", saveResult);
 
       const resultDto: PostDto = {
         id: saveResult._id.toString(),
         content: saveResult.content,
-        authorId: "",
+        // authorId: saveResult.authorId.toString(),
       };
 
       res.send(resultDto);
