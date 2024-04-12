@@ -29,11 +29,8 @@ export const createPostRoutes = (): Router => {
     "/",
     requestHandler(async (req: Request, res: Response) => {
       const validationResult = validateRequest(req.body, NewPostDtoSchema);
-
       const userId = "6618d79936ecacf19d3fbe16";
       // const test = new Types.ObjectId(userId)
-
-      console.log("validationResult", validationResult);
 
       if (!validationResult.success) {
         throw new ApiError("bad-request");
@@ -44,8 +41,6 @@ export const createPostRoutes = (): Router => {
         authorId: userId,
       });
       const saveResult = await PostRepository.save(newPost);
-
-      console.log("saveResult", saveResult);
 
       const resultDto: PostDto = {
         id: saveResult._id.toString(),

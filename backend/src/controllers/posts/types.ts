@@ -5,7 +5,7 @@ export const PostSchema = z.object({
   id: z
     .string()
     .refine((id) => isObjectId(id), { message: "Invalid ObjectId" }),
-  content: z.string(),
+  content: z.string().min(1),
   authorId: z
     .string()
     .refine((id) => isObjectId(id), { message: "Invalid ObjectId" })

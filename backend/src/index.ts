@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 import express from "express";
 import { connectDb } from "./configuration/mongo";
 import { createPostRoutes, createUserRoutes } from "./controllers";
-import { errorMiddleware } from "./error-middleware";
+import { contextMiddleware } from "./middleware/context-middleware";
+import { errorMiddleware } from "./middleware/error-middleware";
 
 const app = express();
 const port = 3001;
@@ -14,7 +15,18 @@ app.use(express.json());
 connectDb(process.env.MONGO_DB_CONNECTION_STRING ?? "");
 
 // https://expressjs.com/en/resources/middleware/cors.html
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    allowedHeaders: ["cookie", "content-type"],
+    exposedHeaders: "*",
+    credentials: true,
+    preflightContinue: true,
+    methods: "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE",
+  })
+);
+
+app.use(contextMiddleware());
 
 app.use("/users", createUserRoutes());
 app.use("/posts", createPostRoutes());

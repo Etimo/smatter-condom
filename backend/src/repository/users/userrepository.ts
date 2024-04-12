@@ -15,4 +15,8 @@ const getAll = async () => {
   return users;
 };
 
-export const UserRepository = { getAll, mapToNew, save };
+const getById = async (id: string) => {
+  return User.findById(id);
+};
+
+export const UserRepository = { getAll, mapToNew, save, getById };

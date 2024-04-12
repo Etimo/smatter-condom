@@ -4,6 +4,8 @@ export const requestHandler = (
   fn: (req: Request, res: Response, next: NextFunction) => Promise<void>
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    fn(req, res, next).catch(next);
+    fn(req, res, next)
+      .then(next)
+      .catch(() => next);
   };
 };

@@ -4,7 +4,9 @@ import { NewPost, Post } from "shared/src/spec";
 const baseUrl = "http://localhost:3001";
 
 const fetchFn = async <T>(url: string): Promise<T> => {
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    credentials: "include",
+  });
   return res.json() as T;
 };
 
@@ -18,6 +20,7 @@ const postFn = async <Body, Response>(
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
+    credentials: "include",
   });
 
   return res.json() as Response;
