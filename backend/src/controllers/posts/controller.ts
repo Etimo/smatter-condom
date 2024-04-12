@@ -1,4 +1,5 @@
 import { Request, Response, Router } from "express";
+import { Context } from "../../context";
 import { requestHandler } from "../../controller-function";
 import { ApiError } from "../../errors";
 import { Post } from "../../model/post";
@@ -12,12 +13,17 @@ export const createPostRoutes = (): Router => {
   postRouter.get(
     "/",
     requestHandler(async (req: Request, res: Response) => {
+      const ctx = Context.get(req);
+      const user = ctx.foo;
+
+      console.log("user", user);
+
       const posts = await PostRepository.getAll();
       const postDtos: PostDto[] = posts.map((user) => {
         return {
           id: user._id.toString(),
           content: user.content,
-          authorId: user.authorId.toString(),
+          authorId: user.authorId?.toString(),
         };
       });
 
@@ -45,7 +51,7 @@ export const createPostRoutes = (): Router => {
       const resultDto: PostDto = {
         id: saveResult._id.toString(),
         content: saveResult.content,
-        authorId: saveResult.authorId.toString(),
+        authorId: saveResult.authorId?.toString(),
       };
 
       res.send(resultDto);
@@ -60,18 +66,16 @@ export const createPostRoutes = (): Router => {
         throw new ApiError("bad-request");
       }
 
-      const userId = "6618d79936ecacf19d3fbe16";
-      // const test = new Types.ObjectId(userId)
+      const postToDelete = await PostRepository.findById(req.body.id);
+      if (
+        !postToDelete ||
+        (postToDelete.authorId &&
+          postToDelete.authorId.toString() !== res.locals.user._id.toString())
+      ) {
+        throw new ApiError("not-found");
+      }
 
-      // const saveResult = await PostRepository.save(newPost);
-
-      // console.log("saveResult", saveResult);
-
-      // const resultDto: PostDto = {
-      //   id: saveResult._id.toString(),
-      //   content: saveResult.content,
-      //   authorId: saveResult.authorId.toString(),
-      // };
+      await PostRepository.deletePost(req.body.id);
 
       res.status(204).send();
     })
