@@ -9,4 +9,8 @@ const getAll = async () => {
   return posts;
 };
 
-export const PostRepository = { getAll, save };
+const deletePost = async (id: string) => {
+  return Post.findByIdAndDelete(id);
+};
+
+export const PostRepository = { getAll, save, deletePost };

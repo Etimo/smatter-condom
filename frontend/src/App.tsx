@@ -20,7 +20,7 @@ const App = () => {
             <div className="lg:w-1/2">
               <PostPost />
             </div>
-            <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
+            <div className="rounded-lg bg-white py-6 shadow sm:px-6">
               <Feed />
             </div>
           </div>

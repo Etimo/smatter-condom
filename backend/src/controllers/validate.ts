@@ -1,4 +1,5 @@
-import { ZodSchema } from "zod";
+import { ZodSchema, z } from "zod";
+import { isObjectId } from "../utils";
 
 type Error = {
   message: string;
@@ -23,4 +24,11 @@ export const validateRequest = <T>(
   });
 
   return { success: false, errors };
+};
+
+export const validateId = (id: string): boolean => {
+  if (!z.string().safeParse(id).success) {
+    return false;
+  }
+  return isObjectId(id);
 };

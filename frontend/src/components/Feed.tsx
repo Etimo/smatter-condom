@@ -19,7 +19,7 @@ export const Feed = () => {
       {data.map((post) => (
         <li
           key={post.id}
-          className="w-1/2 mx-auto items-center justify-center gap-x-6 gap-y-4 py-5 sm:flex-nowrap"
+          className="items-center justify-center gap-x-6 gap-y-4 py-5 sm:flex-nowrap"
         >
           <PostCard post={post} />
         </li>
