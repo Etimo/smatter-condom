@@ -19,18 +19,15 @@ export const contextMiddleware = () => {
 
     const sessionCookieValue = sessionCookieMatch[1];
     const userId = fromBase64(sessionCookieValue);
-    console.log("userId", userId);
-
     const user = await UserRepository.getById(userId);
-
-    console.log("user", user);
 
     if (!user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    // set user in ctx
     // http://expressjs.com/en/api.html#res.locals
+    res.locals.user = user;
+
     next();
   };
 };
