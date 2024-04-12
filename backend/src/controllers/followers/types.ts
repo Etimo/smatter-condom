@@ -13,6 +13,5 @@ export const followerSchema = z.object({
     .refine((id) => isObjectId(id), { message: "Invalid ObjectId" }),
 });
 
-export type FollowerDto = z.infer<typeof followerSchema>;
-
-
+export const NewFollowingDto = followerSchema.omit({id:true});
+export type FollowingDto = z.infer<typeof followerSchema>;

@@ -1,19 +1,23 @@
-import { NewCommentDto } from "backend/src/controllers/comments";
-import { IComment, Comment } from "backend/src/model/comment";
+import { FollowingDto, NewFollowingDto } from "backend/src/controllers/followers";
+import { Follower, IFollowing } from "backend/src/model/followers";
+import { Types } from "mongoose";
 
-const mapToNew = (user: NewCommentDto): IComment => {
-  return new Comment(user);
+const map = (following: FollowingDto): IFollowing => {
+  return new Follower(following);
 };
 
-const save = async (comment: IComment) => {
-  const mongoDoc = new Comment(comment);
+const save = async (following: IFollowing) => {
+  const mongoDoc = new Follower(following);
   return mongoDoc.save();
 };
 
 const getAll = async () => {
-  const users = await Comment.find();
+  const users = await Follower.find();
   return users;
 };
 
-export const CommentRepository = { getAll, mapToNew, save };
-
+ const findByFollowingId = async (following:Types.ObjectId) => {
+  const followingUsers = await Follower.find({followingId: following});
+  return followingUsers;
+};
+export const FollowingRepository = { getAll, findByFollowingId, mapToNew, save };
