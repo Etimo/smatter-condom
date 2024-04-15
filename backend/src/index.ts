@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 import { connectDb } from "./configuration/mongo";
 import { createPostRoutes, createUserRoutes } from "./controllers";
-import { contextMiddleware } from "./middleware/context-middleware";
+import { authMiddleWare } from "./middleware/auth-middleware";
 import { errorMiddleware } from "./middleware/error-middleware";
 
 const app = express();
@@ -26,7 +26,7 @@ app.use(
   })
 );
 
-app.use(contextMiddleware());
+app.use(authMiddleWare());
 
 app.use("/users", createUserRoutes());
 app.use("/posts", createPostRoutes());

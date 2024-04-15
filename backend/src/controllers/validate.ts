@@ -30,5 +30,6 @@ export const validateId = (id: string): boolean => {
   if (!z.string().safeParse(id).success) {
     return false;
   }
+
   return isObjectId(id);
 };

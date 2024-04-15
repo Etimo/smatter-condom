@@ -1,15 +1,18 @@
 import { NextFunction, Request, Response } from "express";
+import { Context } from "../context";
 import { UserRepository } from "../repository";
 import { fromBase64 } from "../utils/base64-helper";
 
-export const contextMiddleware = () => {
+export const authMiddleWare = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const sessionCookie = req.headers["cookie"];
+
     if (!sessionCookie) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
     const sessionCookieMatch = sessionCookie.match(/session=([^;].+)/);
+
     if (!sessionCookieMatch) {
       return res.status(401).json({ error: "Unauthorized" });
     }
@@ -17,11 +20,13 @@ export const contextMiddleware = () => {
     const userId = fromBase64(sessionCookieMatch[1]);
     const user = await UserRepository.getById(userId);
     if (!user) {
+      console.log(`No user with id ${userId} in db`);
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    // http://expressjs.com/en/api.html#res.locals
-    res.locals.user = user;
+    const ctx = Context.getInstance();
+    ctx.user = user;
+
     next();
   };
 };

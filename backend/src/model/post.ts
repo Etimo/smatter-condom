@@ -8,7 +8,7 @@ const postSchema = new Schema<IPost>({
 type IPost = {
   _id: Types.ObjectId;
   content: string;
-  authorId: Types.ObjectId;
+  authorId?: Types.ObjectId;
 };
 
 type INewPost = Omit<IPost, "_id">;
