@@ -13,8 +13,8 @@ export const createPostRoutes = (): Router => {
   postRouter.get(
     "/",
     requestHandler(async (req: Request, res: Response) => {
-      const ctx = Context.get(req);
-      const user = ctx.foo;
+      const ctx = Context.getInstance();
+      const user = ctx.user;
 
       console.log("user", user);
 
@@ -35,12 +35,12 @@ export const createPostRoutes = (): Router => {
     "/",
     requestHandler(async (req: Request, res: Response) => {
       const validationResult = validateRequest(req.body, NewPostDtoSchema);
-      const userId = "6618d79936ecacf19d3fbe16";
-      // const test = new Types.ObjectId(userId)
-
       if (!validationResult.success) {
         throw new ApiError("bad-request");
       }
+
+      const ctx = Context.getInstance();
+      const userId = ctx.user._id;
 
       const newPost = new Post({
         ...validationResult.result,
@@ -66,11 +66,13 @@ export const createPostRoutes = (): Router => {
         throw new ApiError("bad-request");
       }
 
+      const ctx = Context.getInstance();
+      const userId = ctx.user._id;
+
       const postToDelete = await PostRepository.findById(req.body.id);
       if (
         !postToDelete ||
-        (postToDelete.authorId &&
-          postToDelete.authorId.toString() !== res.locals.user._id.toString())
+        postToDelete.authorId?.toString() !== userId.toString()
       ) {
         throw new ApiError("not-found");
       }

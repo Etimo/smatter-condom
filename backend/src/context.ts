@@ -1,19 +1,26 @@
-import { Request } from "express";
 import { IUser } from "./model/user";
 
 export class Context {
-  static _bindings = new WeakMap<Request, Context>();
-
-  public foo!: IUser;
-
-  constructor() {}
-
-  static bind(req: Request): void {
-    const ctx = new Context();
-    Context._bindings.set(req, ctx);
+  private static instance: Context;
+  private constructor() {}
+  public static getInstance(): Context {
+    if (!Context.instance) {
+      Context.instance = new Context();
+    }
+    return Context.instance;
   }
 
-  static get(req: Request): Context {
-    return Context._bindings.get(req)!;
+  private _user: IUser | null = null;
+
+  public set user(user: IUser) {
+    if (this._user) {
+      throw new Error("User already set");
+    }
+    this._user = user;
+  }
+
+  public get user(): IUser {
+    if (!this._user) throw new Error("User not set");
+    return this._user!;
   }
 }

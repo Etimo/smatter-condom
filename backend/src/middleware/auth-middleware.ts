@@ -5,40 +5,27 @@ import { fromBase64 } from "../utils/base64-helper";
 
 export const authMiddleWare = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    console.log("auth middleware");
     const sessionCookie = req.headers["cookie"];
-    console.log(sessionCookie);
 
     if (!sessionCookie) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    console.log("1");
-
     const sessionCookieMatch = sessionCookie.match(/session=([^;].+)/);
-    console.log(sessionCookieMatch);
 
     if (!sessionCookieMatch) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    console.log("2");
-
     const userId = fromBase64(sessionCookieMatch[1]);
-
-    console.log(userId);
-
     const user = await UserRepository.getById(userId);
     if (!user) {
+      console.log(`No user with id ${userId} in db`);
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    console.log("3");
-
-    const ctx = Context.get(req);
-    ctx.foo = user;
-
-    console.log("ctx", ctx);
+    const ctx = Context.getInstance();
+    ctx.user = user;
 
     next();
   };
