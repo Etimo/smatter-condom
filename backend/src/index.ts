@@ -4,7 +4,6 @@ import express from "express";
 import { connectDb } from "./configuration/mongo";
 import { createPostRoutes, createUserRoutes } from "./controllers";
 import { authMiddleWare } from "./middleware/auth-middleware";
-import { contextMiddleWare } from "./middleware/context-middleware";
 import { errorMiddleware } from "./middleware/error-middleware";
 
 const app = express();
@@ -26,7 +25,7 @@ app.use(
     methods: "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
-app.use(contextMiddleWare());
+
 app.use(authMiddleWare());
 
 app.use("/users", createUserRoutes());
