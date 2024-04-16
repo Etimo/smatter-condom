@@ -1,6 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import httpContext from "express-http-context";
 import { connectDb } from "./configuration/mongo";
 import { createPostRoutes, createUserRoutes } from "./controllers";
 import { authMiddleWare } from "./middleware/auth-middleware";
@@ -26,6 +27,7 @@ app.use(
   })
 );
 
+app.use(httpContext.middleware);
 app.use(authMiddleWare());
 
 app.use("/users", createUserRoutes());

@@ -1,28 +1,17 @@
+import httpContext from "express-http-context";
 import { IUser } from "./model/user";
 
-// use express http context instead
 // https://www.npmjs.com/package/express-http-context
-export class Context {
-  private static instance: Context;
-  private constructor() {}
-  public static getInstance(): Context {
-    if (!Context.instance) {
-      Context.instance = new Context();
-    }
-    return Context.instance;
-  }
+type Context = {
+  user: IUser;
+};
 
-  private _user: IUser | null = null;
+export const setContext = (context: Partial<Context>) => {
+  const current = httpContext.get("context") as Context;
+  const updated = { ...current, ...context };
+  httpContext.set("context", updated);
+};
 
-  public set user(user: IUser) {
-    if (this._user) {
-      throw new Error("User already set");
-    }
-    this._user = user;
-  }
-
-  public get user(): IUser {
-    if (!this._user) throw new Error("User not set");
-    return this._user!;
-  }
-}
+export const getContext = () => {
+  return httpContext.get("context") as Context;
+};

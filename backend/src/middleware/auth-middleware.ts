@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Context } from "../context";
+import { setContext } from "../context";
 import { UserRepository } from "../repository";
 import { fromBase64 } from "../utils/base64-helper";
 
@@ -24,9 +24,7 @@ export const authMiddleWare = () => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const ctx = Context.getInstance();
-    ctx.user = user;
-
+    setContext({ user });
     next();
   };
 };

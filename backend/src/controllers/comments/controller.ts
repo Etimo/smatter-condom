@@ -1,8 +1,8 @@
+import { CommentRepository } from "backend/src/repository/comments";
 import bodyParser from "body-parser";
 import { Request, Response, Router } from "express";
 import { validateRequest } from "../validate";
-import { NewCommentDto, CommentDto } from "./types";
-import { CommentRepository } from "backend/src/repository/comments";
+import { CommentDto, NewCommentDto } from "./types";
 
 const jsonParser = bodyParser.json();
 
@@ -17,7 +17,7 @@ export const createPostRoutes = (): Router => {
         id: user._id.toString(),
         content: user.content,
         authorId: user.authorId.toString(),
-        postId: user.postId.toString()
+        postId: user.postId.toString(),
       };
     });
 
@@ -39,6 +39,7 @@ export const createPostRoutes = (): Router => {
       id: saveResult._id.toString(),
       content: saveResult.content,
       authorId: "",
+      postId: "",
     };
 
     res.send(resultDto);

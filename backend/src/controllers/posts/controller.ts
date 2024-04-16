@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { Context } from "../../context";
+import { getContext } from "../../context";
 import { requestHandler } from "../../controller-function";
 import { ApiError } from "../../errors";
 import { Post } from "../../model/post";
@@ -13,10 +13,7 @@ export const createPostRoutes = (): Router => {
   postRouter.get(
     "/",
     requestHandler(async (req: Request, res: Response) => {
-      const ctx = Context.getInstance();
-      const user = ctx.user;
-
-      console.log("user", user);
+      const { user } = getContext();
 
       const posts = await PostRepository.getAll();
       const postDtos: PostDto[] = posts.map((user) => {
@@ -39,12 +36,11 @@ export const createPostRoutes = (): Router => {
         throw new ApiError("bad-request");
       }
 
-      const ctx = Context.getInstance();
-      const userId = ctx.user._id;
+      const { user } = getContext();
 
       const newPost = new Post({
         ...validationResult.result,
-        authorId: userId,
+        authorId: user._id,
       });
       const saveResult = await PostRepository.save(newPost);
 
@@ -66,7 +62,7 @@ export const createPostRoutes = (): Router => {
         throw new ApiError("bad-request");
       }
 
-      const ctx = Context.getInstance();
+      const ctx = getContext();
       const userId = ctx.user._id;
 
       const postToDelete = await PostRepository.findById(req.body.id);
