@@ -1,5 +1,7 @@
 import { IUser } from "./model/user";
 
+// use express http context instead
+// https://www.npmjs.com/package/express-http-context
 export class Context {
   private static instance: Context;
   private constructor() {}
