@@ -8,9 +8,7 @@
     "module": "CommonJS",
     "skipLibCheck": true,
     "baseUrl": ".",
-    "paths": {
-      "@shared*": ["./shared/src/index"]
-    },
+
     "strict": true
   },
   "exclude": ["node_modules"]

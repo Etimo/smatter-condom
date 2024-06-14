@@ -1,6 +1,6 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { Post } from "shared/src/index";
 import { Endpoints, useSmatterQuery } from "../api";
+import { Post } from "../types/spec";
 
 export const Feed = () => {
   const { isPending, data, error } = useSmatterQuery(Endpoints.posts.get);

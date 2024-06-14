@@ -1,11 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Endpoints } from "../api";
+import { toast } from "./ui/use-toast";
 
 export const PostPost = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: Endpoints.posts.create.request,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: Endpoints.posts.get.key });
+      toast({
+        description: "Post created",
+        title: "Success",
+      });
+    },
   });
 
   const {
@@ -14,11 +22,7 @@ export const PostPost = () => {
     formState: { errors },
   } = useForm<{ content: string }>();
 
-  const onSubmit = handleSubmit(async (data) => {
-    console.log("data", data);
-    await mutation.mutateAsync(data);
-    queryClient.invalidateQueries({ queryKey: Endpoints.posts.get.key });
-  });
+  const onSubmit = handleSubmit(async (data) => mutation.mutate(data));
 
   return (
     <div className="flex items-start space-x-4 bg-white rounded-md p-6 my-6 shadow-md">

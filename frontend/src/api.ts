@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { NewPost, Post } from "shared/src/spec";
+import { NewPost, Post } from "./types/spec";
 
 const baseUrl = "http://localhost:3001";
 
