@@ -1,158 +1,162 @@
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { Endpoints, useSmatterQuery } from "../api";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import { Textarea } from "./ui/textarea";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "./ui/form";
+import { Input } from "./ui/input";
+import { toast } from "./ui/use-toast";
 
 const NewFeed = () => {
+  const { isPending, data, error } = useSmatterQuery(Endpoints.posts.get);
+  const [parent] = useAutoAnimate();
+
+  if (isPending) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto">
         <div className="p-4">
-          <form className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 mb-4">
-            <div className="flex items-start gap-4">
-              <Avatar className="w-10 h-10 rounded-full">
-                <AvatarImage src="/placeholder-user.jpg" />
-                <AvatarFallback>AC</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <Textarea
-                  placeholder="What's happening?"
-                  className="w-full bg-transparent border-0 focus:ring-0 resize-none"
-                />
-                <div className="flex justify-end gap-2 mt-2">
-                  <Button variant="ghost" size="sm">
-                    <ImageIcon className="w-5 h-5" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <GiftIcon className="w-5 h-5" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <VoteIcon className="w-5 h-5" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <SmileIcon className="w-5 h-5" />
-                  </Button>
-                  <Button size="sm">Tweet</Button>
-                </div>
-              </div>
-            </div>
-          </form>
+          <MakeSmat />
           <div className="space-y-4">
-            <Card className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
-              <div className="flex items-start gap-4">
-                <Avatar className="w-10 h-10 rounded-full">
-                  <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>AC</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold">Acme Inc</span>
-                    <span className="text-gray-500 dark:text-gray-400">
-                      @acmeinc
-                    </span>
-                    <span className="text-gray-500 dark:text-gray-400">
-                      · 1h
-                    </span>
-                  </div>
-                  <p className="mt-2">
-                    This is a sample tweet. It can contain text, images, videos,
-                    and other media.
-                  </p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <Button variant="ghost" size="icon">
-                      <MessageCircleIcon className="w-5 h-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <RepeatIcon className="w-5 h-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <HeartIcon className="w-5 h-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <UploadIcon className="w-5 h-5" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
-              <div className="flex items-start gap-4">
-                <Avatar className="w-10 h-10 rounded-full">
-                  <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>AC</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold">Acme Inc</span>
-                    <span className="text-gray-500 dark:text-gray-400">
-                      @acmeinc
-                    </span>
-                    <span className="text-gray-500 dark:text-gray-400">
-                      · 2h
-                    </span>
-                  </div>
-                  <p className="mt-2">
-                    This is another sample tweet. It can contain text, images,
-                    videos, and other media.
-                  </p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <Button variant="ghost" size="icon">
-                      <MessageCircleIcon className="w-5 h-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <RepeatIcon className="w-5 h-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <HeartIcon className="w-5 h-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <UploadIcon className="w-5 h-5" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
-              <div className="flex items-start gap-4">
-                <Avatar className="w-10 h-10 rounded-full">
-                  <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>AC</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold">Acme Inc</span>
-                    <span className="text-gray-500 dark:text-gray-400">
-                      @acmeinc
-                    </span>
-                    <span className="text-gray-500 dark:text-gray-400">
-                      · 3h
-                    </span>
-                  </div>
-                  <p className="mt-2">
-                    This is a third sample tweet. It can contain text, images,
-                    videos, and other media.
-                  </p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <Button variant="ghost" size="icon">
-                      <MessageCircleIcon className="w-5 h-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <RepeatIcon className="w-5 h-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <HeartIcon className="w-5 h-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <UploadIcon className="w-5 h-5" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
+            <ol ref={parent}>
+              {data.map((x) => (
+                <li key={x.id}>
+                  <Smat />
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </div>
     </div>
+  );
+};
+
+const formSchema = z.object({
+  content: z.string().min(2).max(200),
+});
+
+const MakeSmat = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: Endpoints.posts.create.request,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: Endpoints.posts.get.key });
+      toast({
+        description: "You just shared your thoughts with the world 😻",
+        title: "Success!",
+      });
+    },
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      content: "",
+    },
+  });
+
+  const onSubmit = form.handleSubmit(async (data) => mutation.mutate(data));
+
+  return (
+    <>
+      <Form {...form}>
+        <form className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 mb-4">
+          <div className="flex items-start gap-4">
+            <Avatar className="w-10 h-10 rounded-full">
+              <AvatarImage src="/placeholder-user.jpg" />
+              <AvatarFallback>AC</AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="Hello world" {...field} />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-2 mt-2">
+                <Button variant="ghost" size="sm">
+                  <ImageIcon className="w-5 h-5" />
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <GiftIcon className="w-5 h-5" />
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <VoteIcon className="w-5 h-5" />
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <SmileIcon className="w-5 h-5" />
+                </Button>
+                <Button size="sm">Tweet</Button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </Form>
+    </>
+  );
+};
+
+const Smat = () => {
+  return (
+    <Card className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+      <div className="flex items-start gap-4">
+        <Avatar className="w-10 h-10 rounded-full">
+          <AvatarImage src="/placeholder-user.jpg" />
+          <AvatarFallback>AC</AvatarFallback>
+        </Avatar>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <span className="font-bold">Acme Inc</span>
+            <span className="text-gray-500 dark:text-gray-400">@acmeinc</span>
+            <span className="text-gray-500 dark:text-gray-400">· 3h</span>
+          </div>
+          <p className="mt-2">
+            This is a third sample tweet. It can contain text, images, videos,
+            and other media.
+          </p>
+          <div className="flex items-center gap-4 mt-2">
+            <Button variant="ghost" size="icon">
+              <MessageCircleIcon className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <RepeatIcon className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <HeartIcon className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <UploadIcon className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Card>
   );
 };
 
