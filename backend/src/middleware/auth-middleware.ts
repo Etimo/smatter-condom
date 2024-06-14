@@ -5,6 +5,8 @@ import { fromBase64 } from "../utils/base64-helper";
 
 export const authMiddleWare = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
+    if (req.method === "OPTIONS") return next();
+
     const sessionCookie = req.headers["cookie"];
 
     if (!sessionCookie) {

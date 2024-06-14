@@ -4,7 +4,7 @@ import { Endpoints, useSmatterQuery } from "../api";
 
 export const Feed = () => {
   const { isPending, data, error } = useSmatterQuery(Endpoints.posts.get);
-  const [parent] = useAutoAnimate(/* optional config */);
+  const [parent] = useAutoAnimate();
 
   if (isPending) {
     return <p>Loading...</p>;
