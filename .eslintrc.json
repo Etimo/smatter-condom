@@ -2,7 +2,8 @@
   "root": true,
   "env": {
     "browser": true,
-    "es2020": true
+    "es2021": true,
+    "node": true
   },
   "extends": [
     "eslint:recommended",
@@ -11,8 +12,28 @@
   ],
   "ignorePatterns": ["dist"],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["react-refresh"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["react-refresh", "import"],
   "rules": {
+    "@typescript-eslint/consistent-type-exports": [
+      "error",
+      { "fixMixedExportsWithInlineTypeSpecifier": true }
+    ],
+    "@typescript-eslint/no-import-type-side-effects": "error",
+    "@typescript-eslint/consistent-type-imports": [
+      "warn",
+      {
+        "prefer": "type-imports",
+        "fixStyle": "inline-type-imports"
+      }
+    ],
     "@typescript-eslint/no-floating-promises": "error",
     "no-unused-vars": "warn",
     "react-refresh/only-export-components": [

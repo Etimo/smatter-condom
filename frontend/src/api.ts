@@ -7,6 +7,9 @@ const fetchFn = async <T>(url: string): Promise<T> => {
   const res = await fetch(url, {
     credentials: "include",
   });
+
+  if (!res.ok) throw new Error();
+
   return res.json() as T;
 };
 
@@ -22,6 +25,8 @@ const postFn = async <Body, Response>(
     body: JSON.stringify(body),
     credentials: "include",
   });
+
+  if (!res.ok) throw new Error();
 
   return res.json() as Response;
 };
