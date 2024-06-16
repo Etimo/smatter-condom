@@ -14,10 +14,8 @@
   },
   "jestrunner.configPath": "jest.config.js",
   "javascript.preferences.importModuleSpecifierEnding": "js",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.preferences.importModuleSpecifier": "project-relative",
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "exportall.config.relExclusion": ["/packages/common/output"]
+  "eslint.workingDirectories": ["../backend", "../frontend"]
 }
