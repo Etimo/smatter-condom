@@ -1,6 +1,7 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
+import { useUserStore } from "../user-store";
 import { cn } from "../utils";
 
 const user = {
@@ -10,14 +11,11 @@ const user = {
     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
 };
 
-const navigation = [{ name: "Feed", href: "/", current: true }];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
-
 export const Navbar = () => {
+  const { logout } = useUserStore();
+  const navigation = [{ name: "Feed", href: "/", current: true }];
+  const userNavigation = [{ name: "Sign out", onClick: logout }];
+
   return (
     <div className="bg-indigo-600 pb-32">
       <Disclosure
@@ -70,15 +68,6 @@ export const Navbar = () => {
                 </div>
                 <div className="hidden lg:ml-4 lg:block">
                   <div className="flex items-center">
-                    <button
-                      type="button"
-                      className="relative flex-shrink-0 rounded-full bg-indigo-600 p-1 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600"
-                    >
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
-
                     {/* Profile dropdown */}
                     <Menu as="div" className="relative ml-3 flex-shrink-0">
                       <div>
@@ -105,17 +94,17 @@ export const Navbar = () => {
                           {userNavigation.map((item) => (
                             <Menu.Item key={item.name}>
                               {({ active }) => (
-                                <a
-                                  href={item.href}
+                                <button
+                                  onClick={item.onClick}
                                   className={cn(
-                                    "block px-4 py-2 text-sm text-gray-700",
+                                    "w-full block px-4 py-2 text-sm text-gray-700",
                                     {
                                       "bg-gray-100": active,
                                     }
                                   )}
                                 >
                                   {item.name}
-                                </a>
+                                </button>
                               )}
                             </Menu.Item>
                           ))}
@@ -176,8 +165,8 @@ export const Navbar = () => {
                   {userNavigation.map((item) => (
                     <Disclosure.Button
                       key={item.name}
-                      as="a"
-                      href={item.href}
+                      as="button"
+                      onClick={item.onClick}
                       className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-indigo-500 hover:bg-opacity-75"
                     >
                       {item.name}

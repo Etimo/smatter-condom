@@ -8,14 +8,7 @@ import type { Post } from "../types/spec";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import {
   GiftIcon,
   HeartIcon,
@@ -29,16 +22,12 @@ import {
 import { Textarea } from "./ui/textarea";
 import { toast } from "./ui/use-toast";
 
-export const Feed = () => {
-  const { isPending, data, error } = useSmatterQuery(Endpoints.posts.get);
+const Feed = () => {
+  const query = useSmatterQuery(Endpoints.posts.get);
   const [parent] = useAutoAnimate();
 
-  if (isPending) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error.message}</p>;
+  if (query.error) {
+    return <p>Error: {query.error.message}</p>;
   }
 
   return (
@@ -46,12 +35,22 @@ export const Feed = () => {
       <div className="flex-1 overflow-y-auto">
         <div className="p-4">
           <MakeSmat />
-          <ol className="space-y-4" ref={parent}>
-            {data.map((x) => (
-              <li key={x.id}>
-                <Smat post={x} />
-              </li>
-            ))}
+          <ol className="space-y-4" ref={query.data ? parent : null}>
+            {query.isPending ? (
+              <>
+                <SkeletonSmat />
+                <SkeletonSmat />
+                <SkeletonSmat />
+              </>
+            ) : (
+              <>
+                {query.data.map((x) => (
+                  <li key={x.id}>
+                    <Smat post={x} />
+                  </li>
+                ))}
+              </>
+            )}
           </ol>
         </div>
       </div>
@@ -59,27 +58,31 @@ export const Feed = () => {
   );
 };
 
+export default Feed;
+
 const formSchema = z.object({
   content: z.string().min(2).max(200),
 });
 
 const MakeSmat = () => {
   const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: Endpoints.posts.create.request,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: Endpoints.posts.get.key });
-      toast({
-        description: "You just shared your thoughts with the world 😻",
-        title: "Success!",
-      });
-    },
-  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       content: "",
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: Endpoints.posts.create.request,
+    onSuccess: () => {
+      form.reset();
+      void queryClient.invalidateQueries({ queryKey: Endpoints.posts.get.key });
+      toast({
+        description: "You just shared your thoughts with the world 😻",
+        title: "Success!",
+      });
     },
   });
 
@@ -104,9 +107,8 @@ const MakeSmat = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Textarea placeholder="Hello world" {...field} />
+                      <Textarea placeholder="Hello world!" {...field} />
                     </FormControl>
-                    <FormDescription></FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -124,7 +126,7 @@ const MakeSmat = () => {
                 <Button variant="ghost" size="sm">
                   <SmileIcon className="w-5 h-5" />
                 </Button>
-                <Button size="sm">Tweet</Button>
+                <Button size="sm">Smat</Button>
               </div>
             </div>
           </div>
@@ -170,5 +172,22 @@ const Smat = (props: SmatProps) => {
         </div>
       </div>
     </Card>
+  );
+};
+
+const SkeletonSmat = () => {
+  return (
+    <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 animate-pulse">
+      <div className="flex items-start gap-4">
+        <div className="w-10 h-10 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+        <div className="flex-1 space-y-4 py-1">
+          <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/4"></div>
+          <div className="space-y-2">
+            <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+            <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-5/6"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
