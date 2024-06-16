@@ -8,7 +8,6 @@ export const UserSchema = z.object({
     .refine((id) => isObjectId(id), { message: "Invalid ObjectId" }),
   username: z.string(),
   email: z.string().email(),
-  profilePictureUrl: z.string().url().optional(),
 });
 
 export type UserDto = z.infer<typeof UserSchema>;

@@ -1,8 +1,8 @@
 import bodyParser from "body-parser";
 import { Request, Response, Router } from "express";
 import { Types } from "mongoose";
-import { requestHandler } from "../../controller-function";
 import { FollowingRepository } from "../../repository/following/followingrepository";
+import { requestHandler } from "../request-handler";
 import { validateRequest } from "../validate";
 import { FollowingDto, NewFollowingDto } from "./types";
 

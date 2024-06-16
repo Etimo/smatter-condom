@@ -1,0 +1,42 @@
+import { NextFunction, Request, Response } from "express";
+import { setContext } from "../context";
+import { UserRepository } from "../repository/users";
+import { fromBase64 } from "../utils/base64-helper";
+
+export const requestHandler = (
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>,
+  options?: { isPublic?: boolean }
+) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    if (!options?.isPublic) await authenticate(req, res);
+
+    fn(req, res, next)
+      .then(next)
+      .catch((e) => next(e));
+  };
+};
+
+const authenticate = async (req: Request, res: Response) => {
+  if (req.method === "OPTIONS") true;
+
+  const sessionCookie = req.headers["cookie"];
+  if (!sessionCookie) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const sessionCookieMatch = sessionCookie.match(/session=([^;].+)/);
+  if (!sessionCookieMatch) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const userId = fromBase64(sessionCookieMatch[1]);
+  const user = await UserRepository.getById(userId);
+
+  if (!user) {
+    console.log(`No user with id ${userId} in db`);
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  setContext({ user });
+  return true;
+};

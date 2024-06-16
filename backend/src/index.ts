@@ -3,8 +3,9 @@ import dotenv from "dotenv";
 import express from "express";
 import httpContext from "express-http-context";
 import { connectDb } from "./configuration/mongo";
-import { createPostRoutes, createUserRoutes } from "./controllers";
-import { authMiddleWare } from "./middleware/auth-middleware";
+import { createAuthRoutes } from "./controllers/auth/controller";
+import { createPostRoutes } from "./controllers/posts/controller";
+import { createUserRoutes } from "./controllers/users/controller";
 import { errorMiddleware } from "./middleware/error-middleware";
 
 const app = express();
@@ -28,10 +29,10 @@ app.use(
 );
 
 app.use(httpContext.middleware);
-app.use(authMiddleWare());
 
 app.use("/users", createUserRoutes());
 app.use("/posts", createPostRoutes());
+app.use("/auth", createAuthRoutes());
 
 app.listen(port, () => {
   console.log(`Api listening on port ${port}`);

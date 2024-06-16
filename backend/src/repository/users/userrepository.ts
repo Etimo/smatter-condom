@@ -1,11 +1,11 @@
 import { NewUserDto } from "../../controllers/users/types";
-import { IUser, User } from "../../model/user";
+import { INewUser, IUser, User } from "../../model/user";
 
 const mapToNew = (user: NewUserDto): IUser => {
   return new User(user);
 };
 
-const save = async (user: IUser) => {
+const save = async (user: INewUser) => {
   const mongoDoc = new User(user);
   return mongoDoc.save();
 };

@@ -1,5 +1,5 @@
-import { NewCommentDto } from "backend/src/controllers/comments";
-import { IComment, Comment } from "backend/src/model/comment";
+import { NewCommentDto } from "../../controllers/comments/types";
+import { Comment, IComment } from "../../model/comment";
 
 const mapToNew = (user: NewCommentDto): IComment => {
   return new Comment(user);

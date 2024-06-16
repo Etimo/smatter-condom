@@ -1,9 +1,9 @@
 import { Request, Response, Router } from "express";
 import { getContext } from "../../context";
-import { requestHandler } from "../../controller-function";
 import { ApiError } from "../../errors";
 import { Post } from "../../model/post";
-import { PostRepository } from "../../repository";
+import { PostRepository } from "../../repository/posts";
+import { requestHandler } from "../request-handler";
 import { validateId, validateRequest } from "../validate";
 import { NewPostDtoSchema, PostDto } from "./types";
 
