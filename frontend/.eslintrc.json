@@ -1,0 +1,7 @@
+{
+  "extends": ["../.eslintrc.json"],
+  "plugins": ["@typescript-eslint", "react-refresh", "react-hooks"],
+  "rules": {
+    "react-refresh/only-export-components": "warn"
+  }
+}

@@ -13,16 +13,19 @@ export const createPostRoutes = (): Router => {
   postRouter.get(
     "/",
     requestHandler(async (req: Request, res: Response) => {
-      const { user } = getContext();
-
       const posts = await PostRepository.getAll();
-      const postDtos: PostDto[] = posts.map((user) => {
-        return {
-          id: user._id.toString(),
-          content: user.content,
-          authorId: user.authorId?.toString(),
-        };
-      });
+      const postDtos: PostDto[] = posts
+        .sort((a, b) => {
+          return b.createdAt.getTime() - a.createdAt.getTime();
+        })
+        .map((user) => {
+          return {
+            id: user._id.toString(),
+            content: user.content,
+            authorId: user.authorId?.toString(),
+            createdAt: user.createdAt,
+          };
+        });
 
       res.send(postDtos);
     })
@@ -32,6 +35,7 @@ export const createPostRoutes = (): Router => {
     "/",
     requestHandler(async (req: Request, res: Response) => {
       const validationResult = validateRequest(req.body, NewPostDtoSchema);
+
       if (!validationResult.success) {
         throw new ApiError("bad-request");
       }
@@ -42,12 +46,14 @@ export const createPostRoutes = (): Router => {
         ...validationResult.result,
         authorId: user._id,
       });
+
       const saveResult = await PostRepository.save(newPost);
 
       const resultDto: PostDto = {
         id: saveResult._id.toString(),
         content: saveResult.content,
         authorId: saveResult.authorId?.toString(),
+        createdAt: saveResult.createdAt,
       };
 
       res.send(resultDto);

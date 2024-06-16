@@ -1,5 +1,5 @@
+import Feed from "./components/Feed";
 import { Navbar } from "./components/Navbar";
-import NewFeed from "./components/NewFeed";
 import { Toaster } from "./components/ui/toaster";
 
 const App = () => {
@@ -10,7 +10,7 @@ const App = () => {
         <main className="-mt-32">
           <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
             <div className="rounded-lg bg-white py-6 shadow sm:px-6">
-              <NewFeed />
+              <Feed />
             </div>
           </div>
         </main>

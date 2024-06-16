@@ -1,6 +1,33 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import z from "zod";
 import { Endpoints, useSmatterQuery } from "../api";
-import { Post } from "../types/spec";
+import type { Post } from "../types/spec";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Button } from "./ui/button";
+import { Card } from "./ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "./ui/form";
+import {
+  GiftIcon,
+  HeartIcon,
+  ImageIcon,
+  MessageCircleIcon,
+  RepeatIcon,
+  SmileIcon,
+  UploadIcon,
+  VoteIcon,
+} from "./ui/icons";
+import { Textarea } from "./ui/textarea";
+import { toast } from "./ui/use-toast";
 
 export const Feed = () => {
   const { isPending, data, error } = useSmatterQuery(Endpoints.posts.get);
@@ -15,49 +42,133 @@ export const Feed = () => {
   }
 
   return (
-    <ul role="list" ref={parent} className="divide-y divide-gray-100">
-      {data.map((post) => (
-        <li
-          key={post.id}
-          className="items-center justify-center gap-x-6 gap-y-4 py-5 sm:flex-nowrap"
-        >
-          <PostCard post={post} />
-        </li>
-      ))}
-    </ul>
-  );
-};
-
-type PostProps = {
-  post: Post;
-};
-
-const PostCard = (props: PostProps) => {
-  return (
-    <div className="rounded-md shadow-md p-6">
-      <div className="flex items-center">
-        <img
-          className="h-10 w-10 rounded-full"
-          src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          alt=""
-        />
-        <div className="ml-3">
-          <div className="min-w-0 flex-1">
-            <div>
-              <div className="text-sm">
-                <p className="font-medium text-gray-900">Mr Martinez</p>
-              </div>
-              <p className="mt-0.5 text-sm text-gray-500">
-                Commented 5 days ago
-              </p>
-            </div>
-            <div className="mt-2 text-sm text-gray-700">
-              {/* <p>{activityItem.comment}</p> */}
-            </div>
-          </div>
-          <p className="text-sm text-gray-900">{props.post.content}</p>
+    <div className="flex flex-col h-full">
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-4">
+          <MakeSmat />
+          <ol className="space-y-4" ref={parent}>
+            {data.map((x) => (
+              <li key={x.id}>
+                <Smat post={x} />
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </div>
+  );
+};
+
+const formSchema = z.object({
+  content: z.string().min(2).max(200),
+});
+
+const MakeSmat = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: Endpoints.posts.create.request,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: Endpoints.posts.get.key });
+      toast({
+        description: "You just shared your thoughts with the world 😻",
+        title: "Success!",
+      });
+    },
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      content: "",
+    },
+  });
+
+  const onSubmit = form.handleSubmit(async (data) => mutation.mutate(data));
+
+  return (
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={onSubmit}
+          className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 mb-4"
+        >
+          <div className="flex items-start gap-4">
+            <Avatar className="w-10 h-10 rounded-full">
+              <AvatarImage src="/placeholder-user.jpg" />
+              <AvatarFallback>AC</AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea placeholder="Hello world" {...field} />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-2 mt-2">
+                <Button variant="ghost" size="sm">
+                  <ImageIcon className="w-5 h-5" />
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <GiftIcon className="w-5 h-5" />
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <VoteIcon className="w-5 h-5" />
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <SmileIcon className="w-5 h-5" />
+                </Button>
+                <Button size="sm">Tweet</Button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </Form>
+    </>
+  );
+};
+
+type SmatProps = {
+  post: Post;
+};
+
+const Smat = (props: SmatProps) => {
+  return (
+    <Card className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+      <div className="flex items-start gap-4">
+        <Avatar className="w-10 h-10 rounded-full">
+          <AvatarImage src="/placeholder-user.jpg" />
+          <AvatarFallback>AC</AvatarFallback>
+        </Avatar>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <span className="font-bold">Acme Inc</span>
+            <span className="text-gray-500 dark:text-gray-400">@acmeinc</span>
+            <span className="text-gray-500 dark:text-gray-400">· 3h</span>
+          </div>
+          <p className="mt-2">{props.post.content}</p>
+          <div className="flex items-center gap-4 mt-2">
+            <Button variant="ghost" size="icon">
+              <MessageCircleIcon className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <RepeatIcon className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <HeartIcon className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <UploadIcon className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Card>
   );
 };

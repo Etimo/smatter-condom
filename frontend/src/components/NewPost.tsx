@@ -8,7 +8,7 @@ export const PostPost = () => {
   const mutation = useMutation({
     mutationFn: Endpoints.posts.create.request,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: Endpoints.posts.get.key });
+      void queryClient.invalidateQueries({ queryKey: Endpoints.posts.get.key });
       toast({
         description: "Post created",
         title: "Success",

@@ -10,9 +10,14 @@ export const PostSchema = z.object({
     .string()
     .refine((id) => isObjectId(id), { message: "Invalid ObjectId" })
     .optional(),
+  createdAt: z.date(),
 });
 
 export type PostDto = z.infer<typeof PostSchema>;
 
-export const NewPostDtoSchema = PostSchema.omit({ id: true, authorId: true });
+export const NewPostDtoSchema = PostSchema.omit({
+  id: true,
+  authorId: true,
+  createdAt: true,
+});
 export type NewPostDto = z.infer<typeof NewPostDtoSchema>;
