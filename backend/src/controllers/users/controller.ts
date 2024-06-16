@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { UserRepository } from "../../repository";
+import { UserRepository } from "../../repository/users";
 import { requestHandler } from "../request-handler";
 import { UserDto } from "./types";
 
