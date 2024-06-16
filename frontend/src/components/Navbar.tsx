@@ -17,20 +17,20 @@ export const Navbar = () => {
   const userNavigation = [{ name: "Sign out", onClick: logout }];
 
   return (
-    <div className="bg-indigo-600 pb-32">
+    <div className="bg-gray-900 pb-32">
       <Disclosure
         as="nav"
-        className="border-b border-indigo-300 border-opacity-25 bg-indigo-600 lg:border-none"
+        className="border-b border-gray-300 border-opacity-25 bg-gray-900 lg:border-none"
       >
         {({ open }) => (
           <>
             <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
-              <div className="relative flex h-16 items-center justify-between lg:border-b lg:border-indigo-400 lg:border-opacity-25">
+              <div className="relative flex h-16 items-center justify-between lg:border-b lg:border-gray-400 lg:border-opacity-25">
                 <div className="flex items-center px-2 lg:px-0">
                   <div className="flex-shrink-0">
                     <img
                       className="block h-8 w-8"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=300"
+                      src="https://tailwindui.com/img/logos/mark.svg?color=gray&shade=300"
                       alt="Your Company"
                     />
                   </div>
@@ -41,9 +41,9 @@ export const Navbar = () => {
                           key={item.name}
                           href={item.href}
                           className={cn(
-                            "rounded-md py-2 px-3 text-sm font-medium text-white hover:bg-indigo-500 hover:bg-opacity-75",
+                            "rounded-md py-2 px-3 text-sm font-medium text-white hover:bg-gray-500 hover:bg-opacity-75",
                             {
-                              "bg-indigo-700 text-white": item.current,
+                              "bg-gray-700 text-white": item.current,
                             }
                           )}
                           aria-current={item.current ? "page" : undefined}
@@ -56,7 +56,7 @@ export const Navbar = () => {
                 </div>
                 <div className="flex lg:hidden">
                   {/* Mobile menu button */}
-                  <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md bg-indigo-600 p-2 text-indigo-200 hover:bg-indigo-500 hover:bg-opacity-75 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600">
+                  <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md bg-gray-900 p-2 text-gray-200 hover:bg-gray-500 hover:bg-opacity-75 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
                     <span className="absolute -inset-0.5" />
                     <span className="sr-only">Open main menu</span>
                     {open ? (
@@ -71,7 +71,7 @@ export const Navbar = () => {
                     {/* Profile dropdown */}
                     <Menu as="div" className="relative ml-3 flex-shrink-0">
                       <div>
-                        <Menu.Button className="relative flex rounded-full bg-indigo-600 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600">
+                        <Menu.Button className="relative flex rounded-full bg-gray-900 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
                           <span className="absolute -inset-1.5" />
                           <span className="sr-only">Open user menu</span>
                           <img
@@ -124,9 +124,9 @@ export const Navbar = () => {
                     as="a"
                     href={item.href}
                     className={cn(
-                      "block rounded-md py-2 px-3 text-base font-medium text-white hover:bg-indigo-500 hover:bg-opacity-75",
+                      "block rounded-md py-2 px-3 text-base font-medium text-white hover:bg-gray-500 hover:bg-opacity-75",
                       {
-                        "bg-indigo-700 text-white": item.current,
+                        "bg-gray-700 text-white": item.current,
                       }
                     )}
                     aria-current={item.current ? "page" : undefined}
@@ -135,7 +135,7 @@ export const Navbar = () => {
                   </Disclosure.Button>
                 ))}
               </div>
-              <div className="border-t border-indigo-700 pb-3 pt-4">
+              <div className="border-t border-gray-700 pb-3 pt-4">
                 <div className="flex items-center px-5">
                   <div className="flex-shrink-0">
                     <img
@@ -148,13 +148,13 @@ export const Navbar = () => {
                     <div className="text-base font-medium text-white">
                       {user.name}
                     </div>
-                    <div className="text-sm font-medium text-indigo-300">
+                    <div className="text-sm font-medium text-gray-300">
                       {user.email}
                     </div>
                   </div>
                   <button
                     type="button"
-                    className="relative ml-auto flex-shrink-0 rounded-full bg-indigo-600 p-1 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600"
+                    className="relative ml-auto flex-shrink-0 rounded-full bg-gray-900 p-1 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
                   >
                     <span className="absolute -inset-1.5" />
                     <span className="sr-only">View notifications</span>
@@ -167,7 +167,7 @@ export const Navbar = () => {
                       key={item.name}
                       as="button"
                       onClick={item.onClick}
-                      className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-indigo-500 hover:bg-opacity-75"
+                      className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-500 hover:bg-opacity-75"
                     >
                       {item.name}
                     </Disclosure.Button>
