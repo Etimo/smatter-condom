@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { CommentRepository } from "../../repository/comments";
+import { CommentRepository } from "../../repository/comments/commentrepository";
 import { requestHandler } from "../request-handler";
 import { validateRequest } from "../validate";
 import { CommentDto, NewCommentDto } from "./types";

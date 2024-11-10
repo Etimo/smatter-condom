@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import { getContext } from "../../context";
 import { ApiError } from "../../errors";
 import { Post } from "../../model/post";
-import { PostRepository } from "../../repository/posts";
+import { PostRepository } from "../../repository/posts/postrepository";
 import { requestHandler } from "../request-handler";
 import { validateId, validateRequest } from "../validate";
 import { NewPostDtoSchema, PostDto } from "./types";

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { setContext } from "../context";
-import { UserRepository } from "../repository/users";
+import { UserRepository } from "../repository/users/userrepository";
 import { fromBase64 } from "../utils/base64-helper";
 
 export const requestHandler = (

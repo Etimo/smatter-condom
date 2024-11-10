@@ -3,7 +3,7 @@ import { Request, Response, Router } from "express";
 import { z } from "zod";
 import { getContext } from "../../context";
 import { ApiError } from "../../errors";
-import { UserRepository } from "../../repository/users";
+import { UserRepository } from "../../repository/users/userrepository";
 import { requestHandler } from "../request-handler";
 import { validateRequest } from "../validate";
 
@@ -64,7 +64,7 @@ export const createAuthRoutes = (): Router => {
           10
         );
 
-        await UserRepository.save({
+        await UserRepository.create({
           username: validationResult.result.username,
           email: validationResult.result.email,
           password: hashedPassword,

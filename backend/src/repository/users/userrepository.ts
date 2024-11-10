@@ -5,7 +5,7 @@ const mapToNew = (user: NewUserDto): IUser => {
   return new User(user);
 };
 
-const save = async (user: INewUser) => {
+const create = async (user: INewUser) => {
   const mongoDoc = new User(user);
   return mongoDoc.save();
 };
@@ -19,4 +19,4 @@ const getById = async (id: string) => {
   return User.findById(id);
 };
 
-export const UserRepository = { getAll, mapToNew, save, getById };
+export const UserRepository = { getAll, mapToNew, create, getById };
