@@ -1,5 +1,5 @@
 import { ZodSchema, z } from "zod";
-import { isObjectId } from "../utils";
+import { isObjectId } from "../utils/object-id-regex";
 
 type Error = {
   message: string;

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isObjectId } from "../../utils";
+import { isObjectId } from "../../utils/object-id-regex";
 
 export const CommentSchema = z.object({
   id: z
