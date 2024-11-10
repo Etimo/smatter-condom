@@ -37,7 +37,7 @@ export const createAuthRoutes = (): Router => {
           throw new ApiError("unauthorized");
         }
 
-        res.send();
+        res.send(true);
       },
       { isPublic: true }
     )
@@ -70,7 +70,7 @@ export const createAuthRoutes = (): Router => {
           password: hashedPassword,
         });
 
-        res.send();
+        res.send(true);
       },
       { isPublic: true }
     )

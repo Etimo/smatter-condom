@@ -1,9 +1,15 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Endpoints } from "../api";
 import { toast } from "./ui/use-toast";
 
-export const PostPost = () => {
+const formSchema = z.object({
+  content: z.string().min(1),
+});
+
+export const PostForm = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: Endpoints.posts.create.request,
@@ -16,13 +22,14 @@ export const PostPost = () => {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<{ content: string }>();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      content: "",
+    },
+  });
 
-  const onSubmit = handleSubmit(async (data) => mutation.mutate(data));
+  const onSubmit = form.handleSubmit(async (data) => mutation.mutate(data));
 
   return (
     <div className="flex items-start space-x-4 bg-white rounded-md p-6 my-6 shadow-md">
@@ -45,7 +52,7 @@ export const PostPost = () => {
               className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
               placeholder="Make a post..."
               defaultValue={""}
-              {...register("content")}
+              {...form.register("content")}
             />{" "}
             {/* Spacer element to match the height of the toolbar */}
             <div className="py-2" aria-hidden="true">
@@ -55,7 +62,9 @@ export const PostPost = () => {
               </div>
             </div>
           </div>
-          {errors.content && <p>{errors.content.message}</p>}
+          {form.formState.errors.content && (
+            <p>{form.formState.errors.content.message}</p>
+          )}
 
           <div className="absolute inset-x-0 bottom-0 flex justify-end py-2 pl-3 pr-2">
             <div className="flex-shrink-0">

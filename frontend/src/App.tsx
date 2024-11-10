@@ -1,10 +1,13 @@
 import { Suspense } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import Login from "./Login";
-import PrivateRoute from "./PrivateRoute";
 import Feed from "./components/Feed";
 import { Navbar } from "./components/Navbar";
 import { Toaster } from "./components/ui/toaster";
+import Login from "./Login";
+import PrivateRoute from "./PrivateRoute";
+import Register from "./Register";
+
+const publicRoutes = ["/login", "/register"];
 
 const App = () => {
   const location = useLocation();
@@ -13,8 +16,9 @@ const App = () => {
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
-      {location.pathname !== "/login" && (
+      {!publicRoutes.includes(location.pathname) && (
         <div className="min-h-full">
           <Navbar />
           <main className="-mt-32">

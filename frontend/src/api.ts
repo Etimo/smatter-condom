@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { NewPost, Post } from "./types/spec";
+import type { NewPost, Post } from "./types/spec";
 
 const baseUrl = "http://localhost:3001";
 
@@ -46,6 +46,16 @@ export const Endpoints = {
       key: ["POST-posts"],
       request: (body: NewPost) =>
         postFn<NewPost, Post>(`${baseUrl}/posts`, body),
+    },
+  },
+  auth: {
+    signup: {
+      key: ["POST-auth-signup"],
+      request: (body: { username: string; email: string; password: string }) =>
+        postFn<{ username: string; email: string; password: string }, void>(
+          `${baseUrl}/auth/signup`,
+          body
+        ),
     },
   },
 } as const satisfies Record<string, Record<string, Endpoint<any>>>;
