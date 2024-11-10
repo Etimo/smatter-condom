@@ -57,6 +57,14 @@ export const Endpoints = {
           body
         ),
     },
+    login: {
+      key: ["POST-auth-login"],
+      request: (body: { email: string; password: string }) =>
+        postFn<{ email: string; password: string }, void>(
+          `${baseUrl}/auth/login`,
+          body
+        ),
+    },
   },
 } as const satisfies Record<string, Record<string, Endpoint<any>>>;
 

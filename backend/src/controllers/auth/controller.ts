@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import { Request, Response, Router } from "express";
 import { z } from "zod";
-import { getContext } from "../../context";
 import { ApiError } from "../../errors";
 import { UserRepository } from "../../repository/users/userrepository";
 import { requestHandler } from "../request-handler";
@@ -25,7 +24,12 @@ export const createAuthRoutes = (): Router => {
           throw new ApiError("bad-request");
         }
 
-        const { user } = getContext();
+        const user = await UserRepository.getByEmail(
+          validationResult.result.email
+        );
+
+        console.log(user);
+
         if (!user) throw new ApiError("unauthorized");
 
         const passwordMatch = await bcrypt.compare(

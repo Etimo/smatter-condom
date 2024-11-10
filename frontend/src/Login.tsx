@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { Endpoints } from "./api";
 import { Button } from "./components/ui/button";
 import {
   Card,
@@ -34,15 +36,26 @@ const Login = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "default@default.com",
+      email: "",
       password: "",
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: Endpoints.auth.login.request,
+    onSuccess: () => {
+      console.log("Login successful!");
+      authenticate();
+      navigate("/");
+    },
+    onError: (error) => {
+      console.error(error);
     },
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
     console.log(data);
-    authenticate();
-    navigate("/");
+    mutation.mutate(data);
   });
 
   return (
