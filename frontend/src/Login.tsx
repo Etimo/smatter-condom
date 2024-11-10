@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "./components/ui/form";
 import { Input } from "./components/ui/input";
+import { toast } from "./components/ui/use-toast";
 import { useUserStore } from "./user-store";
 
 const formSchema = z.object({
@@ -43,12 +44,16 @@ const Login = () => {
 
   const mutation = useMutation({
     mutationFn: Endpoints.auth.login.request,
-    onSuccess: () => {
+    onSuccess: (res) => {
       console.log("Login successful!");
-      authenticate();
+      authenticate(res);
       navigate("/");
     },
     onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Invalid email or password",
+      });
       console.error(error);
     },
   });

@@ -52,18 +52,18 @@ export const Endpoints = {
     signup: {
       key: ["POST-auth-signup"],
       request: (body: { username: string; email: string; password: string }) =>
-        postFn<{ username: string; email: string; password: string }, void>(
-          `${baseUrl}/auth/signup`,
-          body
-        ),
+        postFn<
+          { username: string; email: string; password: string },
+          { username: string; email: string }
+        >(`${baseUrl}/auth/signup`, body),
     },
     login: {
       key: ["POST-auth-login"],
       request: (body: { email: string; password: string }) =>
-        postFn<{ email: string; password: string }, void>(
-          `${baseUrl}/auth/login`,
-          body
-        ),
+        postFn<
+          { email: string; password: string },
+          { username: string; email: string }
+        >(`${baseUrl}/auth/login`, body),
     },
   },
 } as const satisfies Record<string, Record<string, Endpoint<any>>>;

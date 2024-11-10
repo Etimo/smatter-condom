@@ -6,11 +6,13 @@ import { Toaster } from "./components/ui/toaster";
 import Login from "./Login";
 import PrivateRoute from "./PrivateRoute";
 import Register from "./Register";
+import { useUserStore } from "./user-store";
 
 const publicRoutes = ["/login", "/register"];
 
 const App = () => {
   const location = useLocation();
+  const user = useUserStore();
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -24,6 +26,7 @@ const App = () => {
           <main className="-mt-32">
             <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
               <div className="rounded-lg bg-white py-6 shadow sm:px-6">
+                {user.info?.username}
                 <Routes>
                   <Route path="/" element={<Navigate to="/feed" />} />
                   <Route

@@ -3,6 +3,7 @@ import { Request, Response, Router } from "express";
 import { z } from "zod";
 import { ApiError } from "../../errors";
 import { UserRepository } from "../../repository/users/userrepository";
+import { toBase64 } from "../../utils/base64-helper";
 import { requestHandler } from "../request-handler";
 import { validateRequest } from "../validate";
 
@@ -28,8 +29,6 @@ export const createAuthRoutes = (): Router => {
           validationResult.result.email
         );
 
-        console.log(user);
-
         if (!user) throw new ApiError("unauthorized");
 
         const passwordMatch = await bcrypt.compare(
@@ -41,7 +40,19 @@ export const createAuthRoutes = (): Router => {
           throw new ApiError("unauthorized");
         }
 
-        res.send(true);
+        const sessionToken = toBase64(user.id);
+
+        res.cookie("session", sessionToken, {
+          httpOnly: true, // revent JavaScript access to the cookie
+          secure: true, // only sent over HTTPS
+          sameSite: "strict", // protect against CSRF
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
+        res.send({
+          username: user.username,
+          email: user.email,
+        });
       },
       { isPublic: true }
     )
@@ -74,7 +85,10 @@ export const createAuthRoutes = (): Router => {
           password: hashedPassword,
         });
 
-        res.send(true);
+        res.send({
+          email: validationResult.result.email,
+          username: validationResult.result.username,
+        });
       },
       { isPublic: true }
     )

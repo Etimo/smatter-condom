@@ -46,9 +46,9 @@ const Register = () => {
 
   const mutation = useMutation({
     mutationFn: Endpoints.auth.signup.request,
-    onSuccess: () => {
+    onSuccess: (res) => {
       console.log("Signup successful!");
-      authenticate();
+      authenticate(res);
       navigate("/");
       toast({
         description: "🚀🚀🚀",
