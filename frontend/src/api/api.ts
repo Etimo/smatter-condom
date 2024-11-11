@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import type { NewPost, Post } from "./types/spec";
 
 const baseUrl = "http://localhost:3001";
 
@@ -35,6 +34,9 @@ export type Endpoint<T> = {
   key: string[];
   request: (body?: any) => Promise<T>;
 };
+
+type Post = { id: string; content: string };
+type NewPost = Omit<Post, "id">;
 
 export const Endpoints = {
   posts: {

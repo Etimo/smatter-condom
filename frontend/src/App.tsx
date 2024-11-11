@@ -6,7 +6,6 @@ import { Toaster } from "./components/ui/toaster";
 import FeedPage from "./pages/private/feed";
 import Login from "./pages/public/login";
 import Register from "./pages/public/register";
-import PrivateRoute from "./private-route";
 import { useUserStore } from "./stores/user-store";
 
 const App = () => {
@@ -23,14 +22,7 @@ const App = () => {
                 {user.user?.username}
                 <Routes>
                   <Route index element={<Navigate to="/feed" />} />
-                  <Route
-                    path="feed"
-                    element={
-                      <PrivateRoute>
-                        <FeedPage />
-                      </PrivateRoute>
-                    }
-                  />
+                  <Route path="feed" element={<FeedPage />} />
                   <Route path="*" element={<>Not found!</>} />
                 </Routes>
               </div>
