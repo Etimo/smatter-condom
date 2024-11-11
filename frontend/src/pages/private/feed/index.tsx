@@ -3,12 +3,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { Endpoints, useSmatterQuery } from "../api";
-import type { Post } from "../types/spec";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { Card } from "./ui/card";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
+import { Endpoints, useSmatterQuery } from "../../../api/api";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../../components/ui/avatar";
+import { Button } from "../../../components/ui/button";
+import { Card } from "../../../components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "../../../components/ui/form";
 import {
   GiftIcon,
   HeartIcon,
@@ -18,11 +27,11 @@ import {
   SmileIcon,
   UploadIcon,
   VoteIcon,
-} from "./ui/icons";
-import { Textarea } from "./ui/textarea";
-import { toast } from "./ui/use-toast";
+} from "../../../components/ui/icons";
+import { Textarea } from "../../../components/ui/textarea";
+import { toast } from "../../../components/ui/use-toast";
 
-const Feed = () => {
+const FeedPage = () => {
   const query = useSmatterQuery(Endpoints.posts.get);
   const [parent] = useAutoAnimate();
 
@@ -58,7 +67,7 @@ const Feed = () => {
   );
 };
 
-export default Feed;
+export default FeedPage;
 
 const formSchema = z.object({
   content: z.string().min(2).max(200),
@@ -137,7 +146,7 @@ const MakeSmat = () => {
 };
 
 type SmatProps = {
-  post: Post;
+  post: { content: string };
 };
 
 const Smat = (props: SmatProps) => {

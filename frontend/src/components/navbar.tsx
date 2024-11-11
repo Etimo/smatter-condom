@@ -1,7 +1,10 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useMutation } from "@tanstack/react-query";
 import { Fragment } from "react";
-import { useUserStore } from "../user-store";
+import { useNavigate } from "react-router-dom";
+import { Endpoints } from "../api/api";
+import { useUserStore } from "../stores/user-store";
 import { cn } from "../utils/class-names";
 
 const user = {
@@ -12,9 +15,19 @@ const user = {
 };
 
 export const Navbar = () => {
-  const { logout } = useUserStore();
+  const navigate = useNavigate();
+  const userStore = useUserStore();
+
+  const logoutMutation = useMutation({
+    mutationFn: Endpoints.auth.logout.request,
+    onSuccess: () => {
+      userStore.setUser(null);
+      navigate("/login");
+    },
+  });
+
   const navigation = [{ name: "Feed", href: "/", current: true }];
-  const userNavigation = [{ name: "Sign out", onClick: logout }];
+  const userNavigation = [{ name: "Sign out", onClick: logoutMutation.mutate }];
 
   return (
     <div className="bg-gray-900 pb-32">
@@ -95,7 +108,7 @@ export const Navbar = () => {
                             <Menu.Item key={item.name}>
                               {({ active }) => (
                                 <button
-                                  onClick={item.onClick}
+                                  onClick={() => item.onClick()}
                                   className={cn(
                                     "w-full block px-4 py-2 text-sm text-gray-700",
                                     {
@@ -166,7 +179,7 @@ export const Navbar = () => {
                     <Disclosure.Button
                       key={item.name}
                       as="button"
-                      onClick={item.onClick}
+                      onClick={() => item.onClick()}
                       className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-500 hover:bg-opacity-75"
                     >
                       {item.name}

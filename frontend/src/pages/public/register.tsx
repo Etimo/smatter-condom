@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import { z } from "zod";
-import { Endpoints } from "./api";
-import { Button } from "./components/ui/button";
+import { Endpoints } from "../../api/api";
+import { Button } from "../../components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,62 +12,64 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./components/ui/card";
+} from "../../components/ui/card";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "./components/ui/form";
-import { Input } from "./components/ui/input";
-import { toast } from "./components/ui/use-toast";
-import { useUserStore } from "./user-store";
+} from "../../components/ui/form";
+import { Input } from "../../components/ui/input";
+import { toast } from "../../components/ui/use-toast";
+import { useUserStore } from "../../stores/user-store";
 
 const formSchema = z.object({
+  username: z.string().min(3, "Username must be atleast 3 characters long"),
   email: z.string().email(),
-  password: z.string().min(1),
+  password: z.string().min(6, "Password must be atleast 6 characters long"),
 });
 
-const Login = () => {
-  const { authenticate } = useUserStore();
+const Register = () => {
+  const userStore = useUserStore();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      username: "",
       email: "",
       password: "",
     },
   });
 
   const mutation = useMutation({
-    mutationFn: Endpoints.auth.login.request,
+    mutationFn: Endpoints.auth.signup.request,
     onSuccess: (res) => {
-      console.log("Login successful!");
-      authenticate(res);
+      userStore.setUser(res);
       navigate("/");
+      toast({
+        description: "🚀🚀🚀",
+        title: "Signup successful!",
+      });
     },
     onError: (error) => {
       toast({
+        description: error.message,
         title: "Error",
-        description: "Invalid email or password",
       });
-      console.error(error);
     },
   });
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    console.log(data);
-    mutation.mutate(data);
-  });
+  const onSubmit = form.handleSubmit(async (data) => mutation.mutate(data));
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
       <Card className="w-full max-w-md p-6 md:p-8">
         <CardHeader className="space-y-2">
-          <CardTitle className="text-2xl font-bold">Login to smatter</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            Sign up to smatter
+          </CardTitle>
           <CardDescription className="text-gray-500 dark:text-gray-400">
             Enter account details to continue
           </CardDescription>
@@ -75,6 +77,20 @@ const Login = () => {
         <CardContent className="space-y-4">
           <Form {...form}>
             <form className="space-y-2">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input placeholder="funkmasta" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="email"
@@ -107,19 +123,12 @@ const Login = () => {
         </CardContent>
         <CardFooter className="block space-y-4">
           <Button onClick={onSubmit} className="w-full">
-            Sign in
+            Register
           </Button>
-
-          <p>
-            Not signed up yet?{" "}
-            <Link to="/register" className="text-blue-500">
-              Register
-            </Link>
-          </p>
         </CardFooter>
       </Card>
     </div>
   );
 };
 
-export default Login;
+export default Register;

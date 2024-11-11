@@ -65,6 +65,15 @@ export const Endpoints = {
           { username: string; email: string }
         >(`${baseUrl}/auth/login`, body),
     },
+    logout: {
+      key: ["GET-auth-logout"],
+      request: () => fetchFn(`${baseUrl}/auth/logout`),
+    },
+    me: {
+      key: ["GET-auth-me"],
+      request: () =>
+        fetchFn<{ username: string; email: string }>(`${baseUrl}/auth/me`),
+    },
   },
 } as const satisfies Record<string, Record<string, Endpoint<any>>>;
 

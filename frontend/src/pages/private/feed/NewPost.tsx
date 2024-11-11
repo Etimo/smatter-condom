@@ -2,8 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Endpoints } from "../api";
-import { toast } from "./ui/use-toast";
+import { Endpoints } from "../../../api/api";
+import { toast } from "../../../components/ui/use-toast";
 
 const formSchema = z.object({
   content: z.string().min(1),
