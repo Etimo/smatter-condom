@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { Endpoints } from "../../api/api";
-import { Button } from "../../components/ui/button";
+import { LoadingButton } from "../../components/ui/button";
 import {
   Card,
   CardContent,
@@ -25,7 +25,7 @@ import { Input } from "../../components/ui/input";
 import { toast } from "../../components/ui/use-toast";
 import { useUserStore } from "../../stores/user-store";
 
-const formSchema = z.object({
+const FormSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
 });
@@ -34,11 +34,11 @@ const Login = () => {
   const navigate = useNavigate();
   const userStore = useUserStore();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: "asd@asd.se",
-      password: "123123",
+      email: "",
+      password: "",
     },
   });
 
@@ -55,10 +55,9 @@ const Login = () => {
       }),
   });
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    console.log(data);
+  function onSubmit(data: z.infer<typeof FormSchema>) {
     mutation.mutate(data);
-  });
+  }
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
@@ -69,9 +68,9 @@ const Login = () => {
             Enter account details to continue
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Form {...form}>
-            <form className="space-y-2">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <CardContent className="space-y-2">
               <FormField
                 control={form.control}
                 name="email"
@@ -99,21 +98,25 @@ const Login = () => {
                   </FormItem>
                 )}
               />
-            </form>
-          </Form>
-        </CardContent>
-        <CardFooter className="block space-y-4">
-          <Button onClick={onSubmit} className="w-full">
-            Sign in
-          </Button>
+            </CardContent>
+            <CardFooter className="block space-y-4">
+              <LoadingButton
+                type="submit"
+                loading={mutation.isPending}
+                className="w-full"
+              >
+                Sign in
+              </LoadingButton>
 
-          <p>
-            Not signed up yet?{" "}
-            <Link to="/register" className="text-blue-500">
-              Register
-            </Link>
-          </p>
-        </CardFooter>
+              <CardDescription className="text-gray-500 dark:text-gray-400">
+                Not signed up yet?{" "}
+                <Link to="/register" className="text-blue-500">
+                  Register
+                </Link>
+              </CardDescription>
+            </CardFooter>
+          </form>
+        </Form>
       </Card>
     </div>
   );

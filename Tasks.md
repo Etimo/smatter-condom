@@ -8,8 +8,3 @@ Welcome etc...
 
 - ◻️ incomplete task
 - ✅ completed task
-
-## Faq
-
-**Q:** Can i use the `any` type?
-**A:** Of course! Every type has its place 😎

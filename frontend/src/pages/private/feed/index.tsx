@@ -155,12 +155,12 @@ const Smat = (props: SmatProps) => {
       <div className="flex items-start gap-4">
         <Avatar className="w-10 h-10 rounded-full">
           <AvatarImage src="/placeholder-user.jpg" />
-          <AvatarFallback>AC</AvatarFallback>
+          <AvatarFallback>FM</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="font-bold">Acme Inc</span>
-            <span className="text-gray-500 dark:text-gray-400">@acmeinc</span>
+            <span className="font-bold">The Funk Master</span>
+            <span className="text-gray-500 dark:text-gray-400">@funkmasta</span>
             <span className="text-gray-500 dark:text-gray-400">· 3h</span>
           </div>
           <p className="mt-2">{props.post.content}</p>

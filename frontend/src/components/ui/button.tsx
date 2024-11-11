@@ -3,6 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -53,4 +54,63 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-export { Button };
+const LoadingButton = React.forwardRef<
+  HTMLButtonElement,
+  ButtonProps & { loading?: boolean }
+>(
+  (
+    { className, variant, size, asChild = false, loading, children, ...props },
+    ref
+  ) => {
+    if (asChild) {
+      return (
+        <Slot ref={ref} {...props}>
+          <>
+            {React.Children.map(
+              children as React.ReactElement,
+              (child: React.ReactElement) => {
+                return React.cloneElement(child, {
+                  className: cn(buttonVariants({ variant, size }), className),
+                  children: (
+                    <>
+                      {loading && (
+                        <Loader2
+                          className={cn(
+                            "h-4 w-4 animate-spin",
+                            children && "mr-2"
+                          )}
+                        />
+                      )}
+                      {child.props.children}
+                    </>
+                  ),
+                });
+              }
+            )}
+          </>
+        </Slot>
+      );
+    }
+
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        disabled={loading}
+        ref={ref}
+        {...props}
+      >
+        <>
+          {loading && (
+            <Loader2
+              className={cn("h-4 w-4 animate-spin", children && "mr-2")}
+            />
+          )}
+          {children}
+        </>
+      </button>
+    );
+  }
+);
+LoadingButton.displayName = "LoadingButton";
+
+export { Button, LoadingButton };
