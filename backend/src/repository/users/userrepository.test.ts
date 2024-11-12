@@ -24,10 +24,12 @@ it("should connect to mongodb", async () => {
   const user = await new User({
     email: "erik.coolguy@b-teamo.se",
     username: "CoolGuy81",
+    password: "Passive"
   }).save();
   const userToo = await new User({
     email: "henrikue.loves.tik-tok@b-teamo.se",
     username: "TypeScriptIsBest",
+    password: "Whoa"
   }).save();
   console.log(user.email, " : ", userToo.email);
 
