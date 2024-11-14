@@ -1,4 +1,5 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, Calendar, MapPin } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { Endpoints, useSmatterQuery } from "../../../api/api";
@@ -12,6 +13,10 @@ import { Button } from "../../../components/ui/button";
 const ProfilePage = () => {
   const paramsUserId = useParams().userId;
   const query = useSmatterQuery(Endpoints.users.getById(paramsUserId!));
+  const followMutation = useMutation({
+    mutationFn: Endpoints.followers.followUser().request,
+     //onSucce
+  });
   const [parent] = useAutoAnimate();
 
   if (query.isError) return <p>Error: {query.error.message}</p>;
@@ -55,6 +60,14 @@ const ProfilePage = () => {
             <div className="flex justify-end mb-4">
               <Button variant="outline" className="rounded-full">
                 Edit profile
+              </Button>
+            </div>
+          )}
+          {!user.isMyself && (
+            <div className="flex justify-end mb-4">
+              <Button variant="outline" className="rounded-full" onClick={
+                () =>followMutation.mutate(paramsUserId!)}>
+                Follow this user
               </Button>
             </div>
           )}

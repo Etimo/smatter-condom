@@ -29,6 +29,7 @@ const findByOwnerId = async (owningUserId: Types.ObjectId) => {
 export const FollowingRepository = {
   getAll,
   findByFollowingId,
+  findByOwnerId,
   mapToNew,
   save,
 };

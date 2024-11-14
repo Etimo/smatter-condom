@@ -4,6 +4,7 @@ import { Types } from "mongoose";
 import { getContext } from "../context";
 import { requestHandler } from "../controllers/request-handler";
 import { validateRequest } from "../controllers/validate";
+import { IFollowing } from "./followermodel";
 import { FollowingRepository } from "./followerrepository";
 import { FollowingDto, NewFollowingDto } from "./followertypes";
 
@@ -11,13 +12,19 @@ const jsonParser = bodyParser.json();
 const followerRouter = Router();
 
 followerRouter.get(
-  "/:following",
+  "/",
   requestHandler(async (req: Request, resp: Response) => {
     //Get user ID from context in the future
-    const followingId = req.params.following;
-    const following = await FollowingRepository.findByFollowingId(
-      new Types.ObjectId(followingId)
-    );
+    const ownerQuery = req.query.owningUserId;
+    const followerQuery = req.query.followerId;
+    var following:IFollowing[]  = [];
+
+    if(ownerQuery && typeof(ownerQuery) ===  "string") {
+            following = await FollowingRepository.findByOwnerId(new Types.ObjectId(req.query.owningUserId as string))
+    }
+    if(followerQuery && typeof(followerQuery) ===  "string") {
+            following = await FollowingRepository.findByOwnerId(new Types.ObjectId(req.query.owningUserId as string))
+    }
 
     const followingDtos = following.map((following) => {
       return {
