@@ -145,6 +145,31 @@ export const Endpoints = {
       };
     },
   },
+  followers: {
+    followUser: () => {
+      return {
+        key: ["POST-following"],
+        request: (followerId: string) =>
+          postFn<{ followerId: string},
+                 {follower: {followerId: string,
+                   ownerUserId: string}}>(
+            `${baseUrl}/followers`, {followerId}
+          ),
+      };
+    },
+
+    listFollowing: () => { return { key: ["GET-following"],
+        request: (findBy: {ownerUserId: string, followerId: string}) => {
+           const args  = findBy.ownerUserId ? `?ownerUserId=${findBy.ownerUserId}` :
+            `?followerId=${findBy.followerId}`;
+            return fetchFn<{
+            id: string,
+            followingId: string,
+            followerId: string}[]>(`${baseUrl}/followers${args}`);
+        }
+    }
+  }
+},
 } as const satisfies Record<string, Record<string, Endpoint<any>>>;
 
 type ReactQueryOptions<T> = Parameters<typeof useQuery<T>>[0];
