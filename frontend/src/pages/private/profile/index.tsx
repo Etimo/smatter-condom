@@ -10,20 +10,21 @@ import {
 } from "../../../components/ui/avatar";
 import { Button } from "../../../components/ui/button";
 import { EditProfileModal } from "./edit-profile";
+import { ProfileSmats } from "./profile-smats";
 
 const ProfilePage = () => {
   const paramsUserId = useParams().userId;
-  const query = useSmatterQuery(Endpoints.users.getById(paramsUserId!));
+  const profileQuery = useSmatterQuery(Endpoints.users.getById(paramsUserId!));
   const followMutation = useMutation({
     mutationFn: Endpoints.followers.followUser().request,
     //onSucce
   });
   const [parent] = useAutoAnimate();
 
-  if (query.isError) return <p>Error: {query.error.message}</p>;
-  if (query.isPending) return <div>Loading...</div>;
+  if (profileQuery.isError) return <p>Error: {profileQuery.error.message}</p>;
+  if (profileQuery.isPending) return <div>Loading...</div>;
 
-  const user = query.data;
+  const user = profileQuery.data;
 
   return (
     <>
@@ -99,7 +100,7 @@ const ProfilePage = () => {
               variant="ghost"
               className="flex-1 rounded-none border-b-2 border-blue-500"
             >
-              Smats
+              Recent Smats
             </Button>
             <Button
               variant="ghost"
@@ -109,45 +110,7 @@ const ProfilePage = () => {
             </Button>
           </nav>
           <div>
-            {/* {user.tweets.map((tweet) => (
-            <div
-              key={tweet.id}
-              className="p-4 border-b border-gray-200 dark:border-gray-800"
-            >
-              <div className="flex gap-4">
-                <Avatar>
-                  <AvatarImage
-                    src="/placeholder.svg?height=40&width=40"
-                    alt={user.username}
-                  />
-                  <AvatarFallback>
-                    {user.username
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="font-bold">{user.username}</p>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      {user.username}
-                    </p>
-                    <span className="text-gray-500 dark:text-gray-400">·</span>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      {tweet.time}
-                    </p>
-                  </div>
-                  <p className="mt-2">{tweet.content}</p>
-                  <div className="flex justify-between mt-4 text-gray-500 dark:text-gray-400">
-                    <p>{tweet.replies} Replies</p>
-                    <p>{tweet.retweets} Retweets</p>
-                    <p>{tweet.likes} Likes</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))} */}
+            <ProfileSmats userId={user.id} />
           </div>
         </main>
       </div>
