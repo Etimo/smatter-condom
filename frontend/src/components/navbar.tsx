@@ -2,7 +2,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useMutation } from "@tanstack/react-query";
 import { Fragment } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Endpoints } from "../api/api";
 import { useUserStore } from "../stores/user-store";
 import { cn } from "../utils/class-names";
@@ -19,14 +19,18 @@ export const Navbar = () => {
   const userStore = useUserStore();
 
   const logoutMutation = useMutation({
-    mutationFn: Endpoints.auth.logout.request,
+    mutationFn: Endpoints.auth.logout().request,
     onSuccess: () => {
       userStore.setUser(null);
       navigate("/login");
     },
   });
 
-  const navigation = [{ name: "Feed", href: "/", current: true }];
+  const navigation = [
+    { name: "Feed", href: "/", current: true },
+    { name: "Profile", href: `/profile/${userStore.user?.id}`, current: false },
+  ];
+
   const userNavigation = [{ name: "Sign out", onClick: logoutMutation.mutate }];
 
   return (
@@ -50,9 +54,9 @@ export const Navbar = () => {
                   <div className="hidden lg:ml-10 lg:block">
                     <div className="flex space-x-4">
                       {navigation.map((item) => (
-                        <a
+                        <Link
                           key={item.name}
-                          href={item.href}
+                          to={item.href}
                           className={cn(
                             "rounded-md py-2 px-3 text-sm font-medium text-white hover:bg-gray-500 hover:bg-opacity-75",
                             {
@@ -62,7 +66,7 @@ export const Navbar = () => {
                           aria-current={item.current ? "page" : undefined}
                         >
                           {item.name}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>

@@ -45,7 +45,7 @@ const Register = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: Endpoints.auth.signup.request,
+    mutationFn: Endpoints.auth.signup().request,
     onSuccess: (res) => {
       userStore.setUser(res);
       navigate("/");

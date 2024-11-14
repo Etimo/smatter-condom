@@ -7,7 +7,7 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const userStore = useUserStore();
 
-  const { isError, data, isLoading } = useSmatterQuery(Endpoints.auth.me, {
+  const { isError, data, isLoading } = useSmatterQuery(Endpoints.auth.me(), {
     refetchInterval: 30000, // refetch every 30 seconds
     retry: false,
     refetchOnReconnect: true,

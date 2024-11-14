@@ -53,6 +53,7 @@ export const createAuthRoutes = (): Router => {
         res.cookie("session", sessionToken, cookieOptions);
 
         res.send({
+          id: user._id,
           username: user.username,
           email: user.email,
         });
@@ -93,6 +94,7 @@ export const createAuthRoutes = (): Router => {
         res.cookie("session", sessionToken, cookieOptions);
 
         res.send({
+          id: user._id,
           email: validationResult.result.email,
           username: validationResult.result.username,
         });
@@ -118,6 +120,7 @@ export const createAuthRoutes = (): Router => {
       // The auth middleware will already throw if not authenticated, since this is not a public route
       const user = getContext().user;
       res.json({
+        id: user._id,
         username: user.username,
         email: user.email,
       });
