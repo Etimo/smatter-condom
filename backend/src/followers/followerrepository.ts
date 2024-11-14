@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { Follower, IFollowing, INewFollowing } from "./../../model/followers";
+import { Follower, IFollowing, INewFollowing } from "./followermodel";
 
 const mapToNew = (following: INewFollowing): IFollowing => {
   return new Follower(following);
@@ -19,6 +19,13 @@ const findByFollowingId = async (following: Types.ObjectId) => {
   const followingUsers = await Follower.find({ followingId: following });
   return followingUsers;
 };
+
+
+const findByOwnerId = async (owningUserId: Types.ObjectId) => {
+  const ownedFollowers = await Follower.find({ owningUserId: owningUserId });
+  return ownedFollowers;
+};
+
 export const FollowingRepository = {
   getAll,
   findByFollowingId,

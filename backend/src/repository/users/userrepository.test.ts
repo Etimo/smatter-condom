@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { connectDb } from "../../configuration/mongo";
+import { connectDb } from "../../domain/configuration/mongo";
 import { User } from "../../model/user";
 let connection: typeof mongoose;
 beforeAll(async () => {

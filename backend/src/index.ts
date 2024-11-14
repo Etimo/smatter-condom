@@ -2,11 +2,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import httpContext from "express-http-context";
-import { connectDb } from "./configuration/mongo";
 import { createAuthRoutes } from "./controllers/auth/controller";
 import { createPostRoutes } from "./controllers/posts/controller";
 import { createUserRoutes } from "./controllers/users/controller";
-import { errorMiddleware } from "./middleware/error-middleware";
+import { connectDb } from "./domain/configuration/mongo";
+import { errorMiddleware } from "./domain/middleware/error-middleware";
 
 const app = express();
 const port = 3001;
