@@ -1,5 +1,5 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { ArrowLeft, Calendar } from "lucide-react";
+import { ArrowLeft, Calendar, MapPin } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { Endpoints, useSmatterQuery } from "../../../api/api";
 import {
@@ -60,34 +60,26 @@ const ProfilePage = () => {
           )}
           <h2 className="text-xl font-bold">{user.username}</h2>
           <p className="text-gray-500 dark:text-gray-400">{user.username}</p>
-          {/* <p className="my-2">{user.bio}</p> */}
+          <p className="my-2">
+            Hello, I love cats! 🐈
+            {/* {user.bio} */}
+          </p>
           <div className="flex flex-wrap gap-y-2 text-sm text-gray-500 dark:text-gray-400">
-            {/* {user.location && (
-              <div className="flex items-center mr-4">
-                <MapPin className="h-4 w-4 mr-1" />
-                {user.location}
-              </div>
-            )}
-            {user.website && (
-              <div className="flex items-center mr-4">
-                <LinkIcon className="h-4 w-4 mr-1" />
-                <a
-                  href={user.website}
-                  className="text-blue-500 hover:underline"
-                >
-                  {user.website.replace("https://", "")}
-                </a>
-              </div>
-            )} */}
+            <div className="flex items-center mr-4">
+              <MapPin className="h-4 w-4 mr-1" />
+              {/* {user.location} */}
+              Stockholm
+            </div>
+
             <div className="flex items-center mr-4">
               <Calendar className="h-4 w-4 mr-1" />
-              Joined
+              Joined 2021-01-01
               {/* {user.joinDate} */}
             </div>
           </div>
           <div className="flex gap-4 mt-4 text-sm">
             <p>
-              {/* <span className="font-bold">{user.following}</span>{" "} */}
+              <span className="font-bold">5{/* {user.following} */}</span>{" "}
               <span className="text-gray-500 dark:text-gray-400">
                 Following
               </span>
@@ -106,26 +98,12 @@ const ProfilePage = () => {
           <Button
             variant="ghost"
             className="flex-1 rounded-none border-b-2 border-blue-500"
-          >
-            Tweets
-          </Button>
+          ></Button>
           <Button
             variant="ghost"
             className="flex-1 rounded-none text-gray-500 dark:text-gray-400"
           >
             Replies
-          </Button>
-          <Button
-            variant="ghost"
-            className="flex-1 rounded-none text-gray-500 dark:text-gray-400"
-          >
-            Media
-          </Button>
-          <Button
-            variant="ghost"
-            className="flex-1 rounded-none text-gray-500 dark:text-gray-400"
-          >
-            Likes
           </Button>
         </nav>
         <div>
