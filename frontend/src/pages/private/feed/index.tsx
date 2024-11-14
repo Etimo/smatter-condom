@@ -32,7 +32,7 @@ import { Textarea } from "../../../components/ui/textarea";
 import { toast } from "../../../components/ui/use-toast";
 
 const FeedPage = () => {
-  const query = useSmatterQuery(Endpoints.posts.get);
+  const query = useSmatterQuery(Endpoints.posts.get());
   const [parent] = useAutoAnimate();
 
   if (query.error) {
@@ -84,10 +84,12 @@ const MakeSmat = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: Endpoints.posts.create.request,
+    mutationFn: Endpoints.posts.create().request,
     onSuccess: () => {
       form.reset();
-      void queryClient.invalidateQueries({ queryKey: Endpoints.posts.get.key });
+      void queryClient.invalidateQueries({
+        queryKey: Endpoints.posts.get().key,
+      });
       toast({
         description: "You just shared your thoughts with the world 😻",
         title: "Success!",

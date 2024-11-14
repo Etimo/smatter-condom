@@ -4,6 +4,7 @@ import AuthWrapper from "./auth-wrapper";
 import { Navbar } from "./components/navbar";
 import { Toaster } from "./components/ui/toaster";
 import FeedPage from "./pages/private/feed";
+import ProfilePage from "./pages/private/profile";
 import Login from "./pages/public/login";
 import Register from "./pages/public/register";
 import { useUserStore } from "./stores/user-store";
@@ -23,6 +24,7 @@ const App = () => {
                 <Routes>
                   <Route index element={<Navigate to="/feed" />} />
                   <Route path="feed" element={<FeedPage />} />
+                  <Route path="profile/:userId" element={<ProfilePage />} />
                   <Route path="*" element={<>Not found!</>} />
                 </Routes>
               </div>

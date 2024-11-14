@@ -30,7 +30,7 @@ const postFn = async <Body, Response>(
   return res.json() as Response;
 };
 
-export type Endpoint<T> = {
+export type Endpoint<T> = (param: string) => {
   key: string[];
   request: (body?: any) => Promise<T>;
 };
@@ -40,41 +40,83 @@ type NewPost = Omit<Post, "id">;
 
 export const Endpoints = {
   posts: {
-    get: {
-      key: ["GET-posts"],
-      request: () => fetchFn<Post[]>(`${baseUrl}/posts`),
+    get: () => {
+      return {
+        key: ["GET-posts"],
+        request: () => fetchFn<Post[]>(`${baseUrl}/posts`),
+      };
     },
-    create: {
-      key: ["POST-posts"],
-      request: (body: NewPost) =>
-        postFn<NewPost, Post>(`${baseUrl}/posts`, body),
+    create: () => {
+      return {
+        key: ["POST-posts"],
+        request: (body: NewPost) =>
+          postFn<NewPost, Post>(`${baseUrl}/posts`, body),
+      };
     },
   },
   auth: {
-    signup: {
-      key: ["POST-auth-signup"],
-      request: (body: { username: string; email: string; password: string }) =>
-        postFn<
-          { username: string; email: string; password: string },
-          { username: string; email: string }
-        >(`${baseUrl}/auth/signup`, body),
+    signup: () => {
+      return {
+        key: ["POST-auth-signup"],
+        request: (body: {
+          username: string;
+          email: string;
+          password: string;
+        }) =>
+          postFn<
+            { username: string; email: string; password: string },
+            { id: string; username: string; email: string }
+          >(`${baseUrl}/auth/signup`, body),
+      };
     },
-    login: {
-      key: ["POST-auth-login"],
-      request: (body: { email: string; password: string }) =>
-        postFn<
-          { email: string; password: string },
-          { username: string; email: string }
-        >(`${baseUrl}/auth/login`, body),
+    login: () => {
+      return {
+        key: ["POST-auth-login"],
+        request: (body: { email: string; password: string }) =>
+          postFn<
+            { email: string; password: string },
+            { id: string; username: string; email: string }
+          >(`${baseUrl}/auth/login`, body),
+      };
     },
-    logout: {
-      key: ["GET-auth-logout"],
-      request: () => fetchFn(`${baseUrl}/auth/logout`),
+    logout: () => {
+      return {
+        key: ["GET-auth-logout"],
+        request: () => fetchFn(`${baseUrl}/auth/logout`),
+      };
     },
-    me: {
-      key: ["GET-auth-me"],
-      request: () =>
-        fetchFn<{ username: string; email: string }>(`${baseUrl}/auth/me`),
+    me: () => {
+      return {
+        key: ["GET-auth-me"],
+        request: () =>
+          fetchFn<{ id: string; username: string; email: string }>(
+            `${baseUrl}/auth/me`
+          ),
+      };
+    },
+  },
+  users: {
+    get: () => {
+      return {
+        key: ["GET-users"],
+        request: () =>
+          fetchFn<{ id: string; username: string; email: string }[]>(
+            `${baseUrl}/users`
+          ),
+      };
+    },
+
+    getById: (id: string) => {
+      return {
+        key: ["GET-users", id],
+        request: () =>
+          fetchFn<{
+            id: string;
+            username: string;
+            email: string;
+            isMyself: boolean;
+          }>(`${baseUrl}/users/${id}`),
+      };
     },
   },
 } as const satisfies Record<string, Record<string, Endpoint<any>>>;
@@ -82,7 +124,7 @@ export const Endpoints = {
 type ReactQueryOptions<T> = Parameters<typeof useQuery<T>>[0];
 
 export const useSmatterQuery = <T>(
-  endpoint: Endpoint<T>,
+  endpoint: ReturnType<Endpoint<T>>,
   options?: Omit<ReactQueryOptions<T>, "queryKey" | "queryFn">
 ) => {
   return useQuery({

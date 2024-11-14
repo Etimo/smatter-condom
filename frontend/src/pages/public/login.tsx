@@ -43,7 +43,7 @@ const Login = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: Endpoints.auth.login.request,
+    mutationFn: Endpoints.auth.login().request,
     onSuccess: (res) => {
       userStore.setUser(res);
       navigate("/");
