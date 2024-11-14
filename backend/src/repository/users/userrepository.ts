@@ -1,5 +1,5 @@
 import { NewUserDto } from "../../controllers/users/types";
-import { INewUser, IUser, User } from "../../model/user";
+import { INewUser, IUpdateUser, IUser, User } from "../../model/user";
 
 const mapToNew = (user: NewUserDto): IUser => {
   return new User(user);
@@ -23,4 +23,15 @@ const getByEmail = async (email: string) => {
   return User.findOne({ email });
 };
 
-export const UserRepository = { getAll, mapToNew, create, getById, getByEmail };
+const updateById = async (id: string, user: IUpdateUser) => {
+  return User.findByIdAndUpdate(id, user, { new: true });
+};
+
+export const UserRepository = {
+  getAll,
+  mapToNew,
+  create,
+  getById,
+  getByEmail,
+  updateById,
+};
