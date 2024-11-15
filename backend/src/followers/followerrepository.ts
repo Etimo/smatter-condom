@@ -26,10 +26,15 @@ const findByOwnerId = async (owningUserId: Types.ObjectId) => {
   return ownedFollowers;
 };
 
+const deleteByOwnerIdAndFollowingId = async (owningId: Types.ObjectId, followingId: Types.ObjectId) => {
+  return await Follower.deleteMany({owningUserId: owningId, followingId: followingId})
+}
+
 export const FollowingRepository = {
   getAll,
   findByFollowingId,
   findByOwnerId,
   mapToNew,
   save,
+  deleteByOwnerIdAndFollowingId
 };
