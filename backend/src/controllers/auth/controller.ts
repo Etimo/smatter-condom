@@ -70,6 +70,7 @@ export const createAuthRoutes = (): Router => {
           email: z.string().email(),
           password: z.string().min(6),
           username: z.string().max(20),
+          displayName: z.string().max(20),
         });
 
         const validationResult = validateRequest(req.body, schema);
@@ -87,6 +88,7 @@ export const createAuthRoutes = (): Router => {
           username: validationResult.result.username,
           email: validationResult.result.email,
           password: hashedPassword,
+          displayName: validationResult.result.displayName
         });
 
         const sessionToken = toBase64(user.id);

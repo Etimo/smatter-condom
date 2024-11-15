@@ -13,7 +13,7 @@ type IUser = {
 
 type INewUser = Omit<
   IUser,
-  "_id" | "profilePictureUrl" | "bannerPictureUrl" | "bio" | "displayName"
+  "_id" | "profilePictureUrl" | "bannerPictureUrl" | "bio"
 >;
 
 type IUpdateUser = Partial<INewUser>;
