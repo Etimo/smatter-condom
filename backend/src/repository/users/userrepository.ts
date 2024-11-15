@@ -12,7 +12,7 @@ const create = async (user: INewUser) => {
 
 const getAll = async () => {
   const users = await User.find();
-  return users;
+  return users.map(u => new User(u) as IUser);
 };
 
 const getById = async (id: string) => {

@@ -5,10 +5,10 @@ import httpContext from "express-http-context";
 import { createAuthRoutes } from "./controllers/auth/controller";
 import { createPostRoutes } from "./controllers/posts/controller";
 import { createUserRoutes } from "./controllers/users/controller";
-import { createFollowerRoutes } from "./followers/controller"
 import { connectDb } from "./domain/configuration/mongo";
 import { errorMiddleware } from "./domain/middleware/error-middleware";
-
+import { createFollowerRoutes } from "./followers/controller";
+import { initDb } from "./init";
 const app = express();
 const port = 3001;
 
@@ -17,6 +17,7 @@ dotenv.config();
 app.use(express.json());
 connectDb(process.env.MONGO_DB_CONNECTION_STRING ?? "");
 //Seed DB with a set of users and comments
+initDb()
 
 // https://expressjs.com/en/resources/middleware/cors.html
 app.use(
