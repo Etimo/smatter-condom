@@ -30,9 +30,12 @@ export const createUserRoutes = (): Router => {
     requestHandler(async (req: Request, res: Response) => {
       const { query } = req.query;
 
-    if (!query || typeof query !== 'string') {
-      throw new ApiError("bad-request", "Search query must be a non-empty string");
-    }
+      if (!query || typeof query !== "string") {
+        throw new ApiError(
+          "bad-request",
+          "Search query must be a non-empty string"
+        );
+      }
       const users = await UserRepository.search(query);
 
       if (!Array.isArray(users)) {
@@ -45,9 +48,9 @@ export const createUserRoutes = (): Router => {
           email: user.email,
           username: user.username,
         };
-      })
+      });
 
-      res.send(userDtos)
+      res.send(userDtos);
     })
   );
 

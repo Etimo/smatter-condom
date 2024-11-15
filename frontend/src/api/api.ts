@@ -44,7 +44,15 @@ export const Endpoints = {
     get: () => {
       return {
         key: ["GET-posts"],
-        request: () => fetchFn<Post[]>(`${baseUrl}/posts`),
+        request: () =>
+          fetchFn<
+            (Post & {
+              user: {
+                username: string;
+                displayName: string;
+              };
+            })[]
+          >(`${baseUrl}/posts`),
       };
     },
     create: () => {
@@ -63,7 +71,7 @@ export const Endpoints = {
           username: string;
           email: string;
           password: string;
-          displayName: string
+          displayName: string;
         }) =>
           postFn<
             { username: string; email: string; password: string },
@@ -160,40 +168,44 @@ export const Endpoints = {
       return {
         key: ["post-following", key],
         request: (followingId: string) =>
-          postFn< {followingId: string},
-                 {follower: {followingId: string,
-                   ownerUserId: string}}
-                   >(
-            `${baseUrl}/followers`, {followingId: followingId}
-          ),
+          postFn<
+            { followingId: string },
+            { follower: { followingId: string; ownerUserId: string } }
+          >(`${baseUrl}/followers`, { followingId: followingId }),
       };
     },
     unfollowUser: (key: string) => {
       return {
         key: ["post-unfollowing", key],
         request: (followingId: string) =>
-          postFn< {followingId: string},
-                 {follower: {followingId: string,
-                   ownerUserId: string}}
-                   >(
-            `${baseUrl}/followers/unfollow`, {followingId: followingId}
-          ),
+          postFn<
+            { followingId: string },
+            { follower: { followingId: string; ownerUserId: string } }
+          >(`${baseUrl}/followers/unfollow`, { followingId: followingId }),
       };
     },
 
-    listFollowing: (key: string) => { return { key: ["GET-following",key],
-        request: (findBy: {ownerUserId: string|undefined,
-          followingId: string|undefined}) => {
-           const args  = findBy.ownerUserId ? `?owningUserId=${findBy.ownerUserId}` :
-            `?followingId=${findBy.followingId}`;
-            return fetchFn<{
-            id: string,
-            ownerUserId: string,
-            followingId: string}[]>(`${baseUrl}/followers${args}`);
-        }
-    }
-  }
-},
+    listFollowing: (key: string) => {
+      return {
+        key: ["GET-following", key],
+        request: (findBy: {
+          ownerUserId: string | undefined;
+          followingId: string | undefined;
+        }) => {
+          const args = findBy.ownerUserId
+            ? `?owningUserId=${findBy.ownerUserId}`
+            : `?followingId=${findBy.followingId}`;
+          return fetchFn<
+            {
+              id: string;
+              ownerUserId: string;
+              followingId: string;
+            }[]
+          >(`${baseUrl}/followers${args}`);
+        },
+      };
+    },
+  },
 } as const satisfies Record<string, Record<string, Endpoint<any>>>;
 
 type ReactQueryOptions<T> = Parameters<typeof useQuery<T>>[0];
@@ -201,11 +213,11 @@ type ReactQueryOptions<T> = Parameters<typeof useQuery<T>>[0];
 export const useSmatterQuery = <T>(
   endpoint: ReturnType<Endpoint<T>>,
   options?: Omit<ReactQueryOptions<T>, "queryKey" | "queryFn">,
-  curryFunction? : (body: any) => Promise<T>
+  curryFunction?: (body: any) => Promise<T>
 ) => {
   return useQuery({
     ...options,
     queryKey: endpoint.key,
-    queryFn: curryFunction? curryFunction : endpoint.request,
+    queryFn: curryFunction ? curryFunction : endpoint.request,
   });
 };

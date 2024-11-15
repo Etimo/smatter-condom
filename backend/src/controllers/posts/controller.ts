@@ -7,6 +7,24 @@ import { requestHandler } from "../request-handler";
 import { validateId, validateRequest } from "../validate";
 import { NewPostDtoSchema, PostDto } from "./types";
 
+const users: {
+  username: string;
+  displayName: string;
+}[] = [
+  {
+    username: "philipForsberg",
+    displayName: "Prebenlover123",
+  },
+  {
+    username: "chunkyCat42",
+    displayName: "Round and proud",
+  },
+  {
+    username: "ittybittykittycommittee",
+    displayName: "Mr Meow",
+  },
+];
+
 export const createPostRoutes = (): Router => {
   const postRouter = Router();
 
@@ -18,12 +36,14 @@ export const createPostRoutes = (): Router => {
         .sort((a, b) => {
           return b.createdAt.getTime() - a.createdAt.getTime();
         })
-        .map((user) => {
+        .map((post) => {
           return {
-            id: user._id.toString(),
-            content: user.content,
-            authorId: user.authorId?.toString(),
-            createdAt: user.createdAt,
+            id: post._id.toString(),
+            content: post.content,
+            authorId: post.authorId?.toString(),
+            createdAt: post.createdAt,
+            // get a random user:
+            user: users[Math.floor(Math.random() * users.length)],
           };
         });
 

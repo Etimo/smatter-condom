@@ -9,7 +9,13 @@ import {
 } from "../components/ui/icons";
 
 type SmatProps = {
-  post: { content: string };
+  post: {
+    content: string;
+    user: {
+      username: string;
+      displayName: string;
+    };
+  };
 };
 
 export const Smat = (props: SmatProps) => {
@@ -18,12 +24,16 @@ export const Smat = (props: SmatProps) => {
       <div className="flex items-start gap-4">
         <Avatar className="w-10 h-10 rounded-full">
           <AvatarImage src="/placeholder-user.jpg" />
-          <AvatarFallback>FM</AvatarFallback>
+          <AvatarFallback>
+            {props.post.user.username[0].toUpperCase()}
+          </AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="font-bold">The Funk Master</span>
-            <span className="text-gray-500 dark:text-gray-400">@funkmasta</span>
+            <span className="font-bold">{props.post.user.displayName}</span>
+            <span className="text-gray-500 dark:text-gray-400">
+              @{props.post.user.username}
+            </span>
             <span className="text-gray-500 dark:text-gray-400">· 3h</span>
           </div>
           <p className="mt-2">{props.post.content}</p>
