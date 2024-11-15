@@ -22,9 +22,9 @@ it("should connect to mongodb", async () => {
   console.log(connection);
   const ownerId =
       new Types.ObjectId()
-  const followerIds =
+  const followingIds =
       [ new Types.ObjectId(), new Types.ObjectId, new Types.ObjectId ]
-   for(const f of followerIds) {
+   for(const f of followingIds) {
 
 
    const tmp = await new Follower({

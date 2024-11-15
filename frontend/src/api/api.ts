@@ -147,26 +147,40 @@ export const Endpoints = {
     },
   },
   followers: {
-    followUser: () => {
+    followUser: (key: string) => {
       return {
-        key: ["POST-following"],
-        request: (followerId: string) =>
-          postFn<{ followerId: string},
-                 {follower: {followerId: string,
-                   ownerUserId: string}}>(
-            `${baseUrl}/followers`, {followerId}
+        key: ["post-following", key],
+        request: (followingId: string) =>
+          postFn< {followingId: string},
+                 {follower: {followingId: string,
+                   ownerUserId: string}}
+                   >(
+            `${baseUrl}/followers`, {followingId: followingId}
+          ),
+      };
+    },
+    unfollowUser: (key: string) => {
+      return {
+        key: ["post-unfollowing", key],
+        request: (followingId: string) =>
+          postFn< {followingId: string},
+                 {follower: {followingId: string,
+                   ownerUserId: string}}
+                   >(
+            `${baseUrl}/followers/unfollow`, {followingId: followingId}
           ),
       };
     },
 
-    listFollowing: () => { return { key: ["GET-following"],
-        request: (findBy: {ownerUserId: string, followerId: string}) => {
-           const args  = findBy.ownerUserId ? `?ownerUserId=${findBy.ownerUserId}` :
-            `?followerId=${findBy.followerId}`;
+    listFollowing: (key: string) => { return { key: ["GET-following",key],
+        request: (findBy: {ownerUserId: string|undefined,
+          followingId: string|undefined}) => {
+           const args  = findBy.ownerUserId ? `?owningUserId=${findBy.ownerUserId}` :
+            `?followingId=${findBy.followingId}`;
             return fetchFn<{
             id: string,
-            followingId: string,
-            followerId: string}[]>(`${baseUrl}/followers${args}`);
+            ownerUserId: string,
+            followingId: string}[]>(`${baseUrl}/followers${args}`);
         }
     }
   }
@@ -177,11 +191,12 @@ type ReactQueryOptions<T> = Parameters<typeof useQuery<T>>[0];
 
 export const useSmatterQuery = <T>(
   endpoint: ReturnType<Endpoint<T>>,
-  options?: Omit<ReactQueryOptions<T>, "queryKey" | "queryFn">
+  options?: Omit<ReactQueryOptions<T>, "queryKey" | "queryFn">,
+  curryFunction? : (body: any) => Promise<T>
 ) => {
   return useQuery({
     ...options,
     queryKey: endpoint.key,
-    queryFn: endpoint.request,
+    queryFn: curryFunction? curryFunction : endpoint.request,
   });
 };

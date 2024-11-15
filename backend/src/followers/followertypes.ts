@@ -5,7 +5,7 @@ export const followerSchema = z.object({
   id: z
     .string()
     .refine((id) => isObjectId(id), { message: "Invalid ObjectId" }),
-  followerId: z
+  followingId: z
     .string()
     .refine((id) => isObjectId(id), { message: "Invalid ObjectId" }),
  owningUserId : z
