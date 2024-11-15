@@ -1,10 +1,5 @@
 # Smatter 🚀
 
-# Table of Contents
-
-1. [Development setup](#example)
-2. [Tasks](#Tasks)
-
 ## What is Smatter?
 
 Smatter is a Twitter-like social media page. We use it as a code base for applicants to complete tasks as part of the interview process.
