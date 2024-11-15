@@ -12,7 +12,6 @@ export type INewFollowing = {
 };
 
 export const followerSchema = new Schema<IFollowing>({
-  _id: { type: Schema.Types.ObjectId, required: true },
   followingId: { type: Schema.Types.ObjectId, required: true },
   owningUserId: { type: Schema.Types.ObjectId, required: true },
 });
