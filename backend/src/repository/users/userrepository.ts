@@ -1,5 +1,5 @@
 import { NewUserDto } from "../../controllers/users/types";
-import { INewUser, IUser, User } from "../../model/user";
+import { INewUser, IUpdateUser, IUser, User } from "../../model/user";
 
 const mapToNew = (user: NewUserDto): IUser => {
   return new User(user);
@@ -23,6 +23,10 @@ const getByEmail = async (email: string) => {
   return User.findOne({ email });
 };
 
+const updateById = async (id: string, user: IUpdateUser) => {
+  return User.findByIdAndUpdate(id, user, { new: true });
+};
+
 const search = async (query: string) => {
   const searchRegex = new RegExp(query, 'i');
 
@@ -36,4 +40,11 @@ const search = async (query: string) => {
   .exec();
 };
 
-export const UserRepository = { getAll, mapToNew, create, getById, getByEmail, search };
+export const UserRepository = {
+  getAll,
+  mapToNew,
+  create,
+  getById,
+  getByEmail, search,
+  updateById,
+};

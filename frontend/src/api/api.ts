@@ -14,10 +14,11 @@ const fetchFn = async <T>(url: string): Promise<T> => {
 
 const postFn = async <Body, Response>(
   url: string,
-  body: Body
+  body: Body,
+  put?: boolean
 ): Promise<Response> => {
   const res = await fetch(url, {
-    method: "POST",
+    method: put ? "PUT" : "POST",
     headers: {
       "Content-Type": "application/json",
     },
@@ -62,6 +63,7 @@ export const Endpoints = {
           username: string;
           email: string;
           password: string;
+          displayName: string
         }) =>
           postFn<
             { username: string; email: string; password: string },
@@ -105,7 +107,6 @@ export const Endpoints = {
           ),
       };
     },
-
     getById: (id: string) => {
       return {
         key: ["GET-users", id],
@@ -115,6 +116,10 @@ export const Endpoints = {
             username: string;
             email: string;
             isMyself: boolean;
+            bio?: string;
+            profilePictureUrl?: string;
+            bannerPictureUrl?: string;
+            displayName: string;
           }>(`${baseUrl}/users/${id}`),
       };
     },
@@ -125,6 +130,28 @@ export const Endpoints = {
           fetchFn<{ id: string; username: string; email: string }[]>(
             `${baseUrl}/users/search?query=${query}`
           ),
+      };
+    },
+    updateById: (id: string) => {
+      return {
+        key: ["PUT-users", id],
+        request: (body: {
+          email: string;
+          bio?: string;
+          profilePictureUrl?: string;
+          bannerPictureUrl?: string;
+          displayName: string;
+        }) =>
+          postFn<
+            {
+              email: string;
+              bio?: string;
+              profilePictureUrl?: string;
+              bannerPictureUrl?: string;
+              displayName: string;
+            },
+            { username: string; email: string }
+          >(`${baseUrl}/users/${id}`, body, true),
       };
     },
   },

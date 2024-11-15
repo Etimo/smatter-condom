@@ -29,6 +29,7 @@ const FormSchema = z.object({
   username: z.string().min(3, "Username must be atleast 3 characters long"),
   email: z.string().email(),
   password: z.string().min(6, "Password must be atleast 6 characters long"),
+
 });
 
 const Register = () => {
@@ -63,7 +64,7 @@ const Register = () => {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    mutation.mutate(data);
+    mutation.mutate({...data, displayName: data.username});
   }
 
   return (

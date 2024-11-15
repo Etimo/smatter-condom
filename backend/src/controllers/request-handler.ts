@@ -8,7 +8,9 @@ export const requestHandler = (
   options?: { isPublic?: boolean }
 ) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    console.log(`${req.method} ${req.url}`);
+    console.log(
+      `${req.method} ${req.url} ${JSON.stringify(req.body, null, 2)}`
+    );
     if (!options?.isPublic) await authenticate(req, res);
 
     fn(req, res, next)

@@ -20,7 +20,6 @@ const App = () => {
           <main className="-mt-32">
             <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
               <div className="rounded-lg bg-white py-6 shadow sm:px-6">
-                {user.user?.username}
                 <Routes>
                   <Route index element={<Navigate to="/feed" />} />
                   <Route path="feed" element={<FeedPage />} />
