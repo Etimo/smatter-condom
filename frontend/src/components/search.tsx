@@ -85,9 +85,7 @@ export const Search = () => {
               <CommandEmpty>No matching results</CommandEmpty>
             ) : (
               <>
-                <CommandEmpty className="invisible">
-                  No users found.
-                </CommandEmpty>
+                <CommandEmpty className="hidden">No users found.</CommandEmpty>
                 {searchTerm.length > 1 && (
                   <CommandGroup heading="Search Results">
                     {filteredUsers.map((user) => (
@@ -95,6 +93,7 @@ export const Search = () => {
                         key={user.id}
                         value={user.id}
                         onSelect={handleSelect}
+                        className="cursor-pointer"
                       >
                         <div className="flex items-center justify-between w-full">
                           <div className="flex flex-col">
