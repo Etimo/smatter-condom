@@ -2,7 +2,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useMutation } from "@tanstack/react-query";
 import { Fragment } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Endpoints } from "../api/api";
 import { useUserStore } from "../stores/user-store";
 import { cn } from "../utils/class-names";
@@ -18,6 +18,8 @@ const user = {
 export const Navbar = () => {
   const navigate = useNavigate();
   const userStore = useUserStore();
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const logoutMutation = useMutation({
     mutationFn: Endpoints.auth.logout().request,
@@ -28,8 +30,12 @@ export const Navbar = () => {
   });
 
   const navigation = [
-    { name: "Feed", href: "/", current: true },
-    { name: "Profile", href: `/profile/${userStore.user?.id}`, current: false },
+    { name: "Feed", href: "/", current: currentPath === "/feed" },
+    {
+      name: "Profile",
+      href: `/profile/${userStore.user?.id}`,
+      current: currentPath.startsWith("/profile"),
+    },
   ];
 
   const userNavigation = [{ name: "Sign out", onClick: logoutMutation.mutate }];
@@ -45,13 +51,6 @@ export const Navbar = () => {
             <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
               <div className="relative flex h-16 items-center justify-between lg:border-b lg:border-gray-400 lg:border-opacity-25">
                 <div className="flex items-center px-2 lg:px-0">
-                  <div className="flex-shrink-0">
-                    <img
-                      className="block h-8 w-8"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=gray&shade=300"
-                      alt="Your Company"
-                    />
-                  </div>
                   <div className="hidden lg:ml-10 lg:block">
                     <div className="flex space-x-4">
                       {navigation.map((item) => (

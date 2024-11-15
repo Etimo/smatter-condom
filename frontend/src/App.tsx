@@ -10,8 +10,6 @@ import Register from "./pages/public/register";
 import { useUserStore } from "./stores/user-store";
 
 const App = () => {
-  const user = useUserStore();
-
   const PrivateLayout = () => {
     return (
       <AuthWrapper>
