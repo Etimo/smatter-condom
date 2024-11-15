@@ -27,6 +27,32 @@ export const createUserRoutes = (): Router => {
   );
 
   userRouter.get(
+    "/search",
+    requestHandler(async (req: Request, res: Response) => {
+      const { query } = req.query;
+
+    if (!query || typeof query !== 'string') {
+      throw new ApiError("bad-request", "Search query must be a non-empty string");
+    }
+      const users = await UserRepository.search(query);
+
+      if (!Array.isArray(users)) {
+        throw new ApiError("not-found", "Invalid search results");
+      }
+
+      const userDtos: UserDto[] = users.map((user) => {
+        return {
+          id: user._id.toString(),
+          email: user.email,
+          username: user.username,
+        };
+      })
+
+      res.send(userDtos)
+    })
+  );
+
+  userRouter.get(
     "/:id",
     requestHandler(async (req: Request, res: Response) => {
       const user = await UserRepository.getById(req.params.id);

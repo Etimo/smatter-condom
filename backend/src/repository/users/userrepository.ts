@@ -27,11 +27,24 @@ const updateById = async (id: string, user: IUpdateUser) => {
   return User.findByIdAndUpdate(id, user, { new: true });
 };
 
+const search = async (query: string) => {
+  const searchRegex = new RegExp(query, 'i');
+
+  return User.find({
+    $or: [
+      { username: searchRegex },
+      { email: searchRegex }
+    ]
+  })
+  .select('username email')
+  .exec();
+};
+
 export const UserRepository = {
   getAll,
   mapToNew,
   create,
   getById,
-  getByEmail,
+  getByEmail, search,
   updateById,
 };
