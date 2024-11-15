@@ -118,6 +118,15 @@ export const Endpoints = {
           }>(`${baseUrl}/users/${id}`),
       };
     },
+    search: (query: string) => {
+      return {
+        key: ["GET-users", query],
+        request: () =>
+          fetchFn<{ id: string; username: string; email: string }[]>(
+            `${baseUrl}/users/search?query=${query}`
+          ),
+      };
+    },
   },
   followers: {
     followUser: () => {
