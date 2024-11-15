@@ -5,7 +5,7 @@ const mapToNew = (following: INewFollowing): IFollowing => {
   return new Follower(following);
 };
 
-const save = async (following: IFollowing) => {
+const save = async (following: INewFollowing) => {
   const mongoDoc = new Follower(following);
   return mongoDoc.save();
 };
@@ -20,15 +20,20 @@ const findByFollowingId = async (following: Types.ObjectId) => {
   return followingUsers;
 };
 
-
 const findByOwnerId = async (owningUserId: Types.ObjectId) => {
   const ownedFollowers = await Follower.find({ owningUserId: owningUserId });
   return ownedFollowers;
 };
 
-const deleteByOwnerIdAndFollowingId = async (owningId: Types.ObjectId, followingId: Types.ObjectId) => {
-  return await Follower.deleteMany({owningUserId: owningId, followingId: followingId})
-}
+const deleteByOwnerIdAndFollowingId = async (
+  owningId: Types.ObjectId,
+  followingId: Types.ObjectId
+) => {
+  return await Follower.deleteMany({
+    owningUserId: owningId,
+    followingId: followingId,
+  });
+};
 
 export const FollowingRepository = {
   getAll,
@@ -36,5 +41,5 @@ export const FollowingRepository = {
   findByOwnerId,
   mapToNew,
   save,
-  deleteByOwnerIdAndFollowingId
+  deleteByOwnerIdAndFollowingId,
 };

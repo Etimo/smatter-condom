@@ -1,4 +1,3 @@
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useMutation } from "@tanstack/react-query";
 import { Calendar, MapPin } from "lucide-react";
 import { useParams } from "react-router-dom";
@@ -17,50 +16,71 @@ const ProfilePage = () => {
   const loggedInUserId = useUserStore().user?.id;
   const paramsUserId = useParams().userId;
   const profileQuery = useSmatterQuery(Endpoints.users.getById(paramsUserId!));
+
   const followingQuery = useSmatterQuery(
     Endpoints.followers.listFollowing("loggedinuserfollowing"),
-  {enabled: !!loggedInUserId, gcTime: 0},
-  () => Endpoints.followers.listFollowing("loggedinusersfollowing").request({ownerUserId: loggedInUserId,
-     followingId: undefined}))
-
+    { enabled: !!loggedInUserId, gcTime: 0 },
+    () =>
+      Endpoints.followers
+        .listFollowing("loggedinusersfollowing")
+        .request({ ownerUserId: loggedInUserId, followingId: undefined })
+  );
 
   const profileFollowersQuery = useSmatterQuery(
-    Endpoints.followers.listFollowing(paramsUserId+"following"),
-  {enabled: !!loggedInUserId, gcTime: 0},
-  () => Endpoints.followers.listFollowing(paramsUserId+"profileusersfollowers").request({ownerUserId: undefined,
-     followingId: paramsUserId}))
-
+    Endpoints.followers.listFollowing(paramsUserId + "following"),
+    { enabled: !!loggedInUserId, gcTime: 0 },
+    () =>
+      Endpoints.followers
+        .listFollowing(paramsUserId + "profileusersfollowers")
+        .request({ ownerUserId: undefined, followingId: paramsUserId })
+  );
 
   const profileFollowingQuery = useSmatterQuery(
-    Endpoints.followers.listFollowing(paramsUserId+"profileuserfollowing"),
-  {enabled: !!loggedInUserId, gcTime: 0},
-  () => Endpoints.followers.listFollowing(paramsUserId+"profileusersfollowing").request({ownerUserId: paramsUserId,
-     followingId: undefined}))
+    Endpoints.followers.listFollowing(paramsUserId + "profileuserfollowing"),
+    { enabled: !!loggedInUserId, gcTime: 0 },
+    () =>
+      Endpoints.followers
+        .listFollowing(paramsUserId + "profileusersfollowing")
+        .request({ ownerUserId: paramsUserId, followingId: undefined })
+  );
 
   const followMutation = useMutation({
     mutationFn: Endpoints.followers.followUser("userfollow").request,
-    onSuccess: async ()=> {
-      await profileFollowersQuery.refetch()
+    onSuccess: async () => {
+      await profileFollowersQuery.refetch();
       await followingQuery.refetch();
-    }
+    },
   });
+
   const unfollowMutation = useMutation({
     mutationFn: Endpoints.followers.unfollowUser("userunfollow").request,
-    onSuccess: async ()=> {
-      await profileFollowersQuery.refetch()
+    onSuccess: async () => {
+      await profileFollowersQuery.refetch();
       await followingQuery.refetch();
-    }
+    },
   });
 
-  const [parent] = useAutoAnimate();
-
-
-  if (profileQuery.isError||followingQuery.isError||profileFollowersQuery.isError||profileFollowingQuery.isError) return <p>Error: BAD QUERIES!</p>;
-  if (!loggedInUserId || profileQuery.isPending||followingQuery.isPending||profileFollowersQuery.isPending||profileFollowingQuery.isPending) return <div>Loading...</div>;
+  if (
+    profileQuery.isError ||
+    followingQuery.isError ||
+    profileFollowersQuery.isError ||
+    profileFollowingQuery.isError
+  )
+    return <p>Error: BAD QUERIES!</p>;
+  if (
+    !loggedInUserId ||
+    profileQuery.isPending ||
+    followingQuery.isPending ||
+    profileFollowersQuery.isPending ||
+    profileFollowingQuery.isPending
+  )
+    return <div>Loading...</div>;
 
   const user = profileQuery.data;
   //TODO: Probably should be in a common state somewhere, but for later.
-  const followingUser = followingQuery.data.find(p => p.followingId === paramsUserId)
+  const followingUser = followingQuery.data.find(
+    (p) => p.followingId === paramsUserId
+  );
 
   return (
     <>
@@ -98,7 +118,7 @@ const ProfilePage = () => {
                 </Button>
               </div>
             )}
-            {!user.isMyself && followingUser &&  (
+            {!user.isMyself && followingUser && (
               <div className="flex justify-end mb-4">
                 <Button
                   variant="outline"
@@ -127,13 +147,17 @@ const ProfilePage = () => {
             </div>
             <div className="flex gap-4 mt-4 text-sm">
               <p>
-                <span className="font-bold">{profileFollowingQuery.data.length} </span>{" "}
+                <span className="font-bold">
+                  {profileFollowingQuery.data.length}{" "}
+                </span>{" "}
                 <span className="text-gray-500 dark:text-gray-400">
                   Following
                 </span>
               </p>
               <p>
-                <span className="font-bold">{profileFollowersQuery.data.length} </span>{" "}
+                <span className="font-bold">
+                  {profileFollowersQuery.data.length}{" "}
+                </span>{" "}
                 <span className="text-gray-500 dark:text-gray-400">
                   Followers
                 </span>
