@@ -63,6 +63,7 @@ export const Endpoints = {
           username: string;
           email: string;
           password: string;
+          displayName: string
         }) =>
           postFn<
             { username: string; email: string; password: string },
