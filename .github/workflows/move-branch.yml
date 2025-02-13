@@ -1,11 +1,13 @@
 name: Move-branch-from-condom
 env:
-  GITHUB_TOKEN: ${{ secrets.NEXTCOOLORIGIN }}
+  DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
 run-name: ${{ github.actor }} is pushing a branch onward and then cleaning up
 on:
   create:
     branches:
       - '*'
+  workflow_dispatch:  # Allows manual triggering
+
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -27,7 +29,11 @@ jobs:
           git checkout ${{ env.BRANCH_NAME }}
           NEW_BRANCH="${{ env.BRANCH_NAME }}-$(date '+%Y%m%d_%H%M%S')"
           git checkout -b $NEW_BRANCH
-          git remote add nextcoolrepo https://oauth2:${{ env.GITHUB_TOKEN }}@github.com/OWNER/REPO.git
+          mkdir -p ~/.ssh
+          echo "${{ env.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git remote add nextcoolrepo git@github.com:Etimo/smatter-submit.git
           git push nextcoolrepo $NEW_BRANCH
-      
+          
       - run: echo "🍏 This job's status is ${{ job.status }}."
