@@ -5,7 +5,7 @@ run-name: ${{ github.actor }} is pushing a branch onward and then cleaning up
 on:
   create:
     branches:
-      - '*'
+      - '**/**/**'
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -37,5 +37,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           git remote add nextcoolrepo git@github.com:Etimo/smatter-submit.git
           git push nextcoolrepo $NEW_BRANCH
+          sleep 10
+          git push -d origin ${{ env.BRANCH_NAME }}
           
       - run: echo "🍏 This job's status is ${{ job.status }}."
