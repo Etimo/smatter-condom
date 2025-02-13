@@ -5,7 +5,7 @@ run-name: ${{ github.actor }} is pushing a branch onward and then cleaning up
 on:
   create:
     branches:
-      - '*'
+      - '.+/.+/.+'
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
