@@ -6,6 +6,8 @@ on:
   create:
     branches:
       - '*'
+  workflow_dispatch:  # Allows manual triggering
+
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -27,9 +29,11 @@ jobs:
           git checkout ${{ env.BRANCH_NAME }}
           NEW_BRANCH="${{ env.BRANCH_NAME }}-$(date '+%Y%m%d_%H%M%S')"
           git checkout -b $NEW_BRANCH
-          echo ${{ env.DEPLOY_SSH_KEY }} > priv.key
-          ssh-add priv.key
+          mkdir -p ~/.ssh
+          echo "${{ env.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
           git remote add nextcoolrepo git@github.com:Etimo/smatter-submit.git
           git push nextcoolrepo $NEW_BRANCH
-      
+          
       - run: echo "🍏 This job's status is ${{ job.status }}."
