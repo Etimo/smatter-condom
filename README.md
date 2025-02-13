@@ -32,11 +32,3 @@ Theres a frontend package and a backend package. The frontend is built with Reac
    ```
 
    The frontend is served on port 5173, and the API can be accessed on port 3001.
-
-## Tasks
-
-**Let users set their own display names when registering**
-
-Currently, the username value is passed as the display name for each user. Update the registration form to include a field for the user's display name, and pass that value to the signup request.
-
-Hint: start in the `register.tsx` file.
