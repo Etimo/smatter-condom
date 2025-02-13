@@ -10,16 +10,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: export branchName = ${{ github.ref }}|awk -f/ '{print $3}'
+      
+      - name: Extract branch name
+        run: echo "BRANCH_NAME=$(echo ${{ github.ref }} | awk -F/ '{print $3}')" >> $GITHUB_ENV
+      
       - name: Check out repository code
         uses: actions/checkout@v4
+        
       - name: List files in the repository
+        run: ls ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}
+      
+      - name: Create and push new branch
         run: |
-          ls ${{ github.workspace }}
-      - working-directory: ${{ github.workspace }}
-      - run: git checkout $branchName
-      - run: git checkout $branchName-$(date|sed 's/ /_/g')
-        run: git remote add nextcoolrepo ${{ GITHUB_TOKEN }}
-      - run: git push nextcoolrepo $branchName-$(date|sed 's/ /_/g')
+          git checkout ${{ env.BRANCH_NAME }}
+          NEW_BRANCH="${{ env.BRANCH_NAME }}-$(date '+%Y%m%d_%H%M%S')"
+          git checkout -b $NEW_BRANCH
+          git remote add nextcoolrepo https://oauth2:${{ env.GITHUB_TOKEN }}@github.com/OWNER/REPO.git
+          git push nextcoolrepo $NEW_BRANCH
+          
       - run: echo "🍏 This job's status is ${{ job.status }}."
-
