@@ -2,9 +2,10 @@ name: Move-branch-from-condom
 env:
     GITHUB_TOKEN: ${{ secrets.NEXTCOOLORIGIN }}
 run-name: ${{ github.actor }} is pushing a branch onward and then cleaning up
-on: 
-  branch_protection_rule:
-    types: [created]
+on:
+  create:
+    branches: 
+      - *
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
