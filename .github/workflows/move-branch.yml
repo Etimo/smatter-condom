@@ -1,0 +1,25 @@
+name: Move-branch-from-condom
+env:
+    GITHUB_TOKEN: ${{ secrets.NEXTCOOLORIGIN }}
+run-name: ${{ github.actor }} is pushing a branch onward and then cleaning up
+on: 
+  branch_protection_rule:
+    types: [created]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: export branchName = ${{ github.ref }}|awk -f/ '{print $3}'
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - working-directory: ${{ github.workspace }}
+      - run: git checkout $branchName
+      - run: git checkout $branchName-$(date|sed 's/ /_/g')
+        run: git remote add nextcoolrepo ${{ GITHUB_TOKEN }}
+      - run: git push nextcoolrepo $branchName-$(date|sed 's/ /_/g')
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+
