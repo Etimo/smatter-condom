@@ -9,7 +9,8 @@
     "dpdm": "dpdm",
     "scan": "npm run scan:frontend && npm run scan:backend",
     "scan:frontend": "npm run dpdm ./frontend/src/App.tsx",
-    "scan:backend": "npm run dpdm ./backend/src/index.ts"
+    "scan:backend": "npm run dpdm ./backend/src/index.ts",
+    "submit": "git push smatter-push $(git branch --show-current)"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
