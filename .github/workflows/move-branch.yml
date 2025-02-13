@@ -37,5 +37,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           git remote add nextcoolrepo git@github.com:Etimo/smatter-submit.git
           git push nextcoolrepo $NEW_BRANCH
+          git push -d origin {{ env.BRANCH_NAME }}
           
       - run: echo "🍏 This job's status is ${{ job.status }}."
