@@ -1,11 +1,11 @@
 name: Move-branch-from-condom
 env:
-    GITHUB_TOKEN: ${{ secrets.NEXTCOOLORIGIN }}
+  GITHUB_TOKEN: ${{ secrets.NEXTCOOLORIGIN }}
 run-name: ${{ github.actor }} is pushing a branch onward and then cleaning up
 on:
   create:
-    branches: 
-      - *
+    branches:
+      - '*'
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -17,7 +17,7 @@ jobs:
       
       - name: Check out repository code
         uses: actions/checkout@v4
-        
+      
       - name: List files in the repository
         run: ls ${{ github.workspace }}
         working-directory: ${{ github.workspace }}
@@ -29,5 +29,5 @@ jobs:
           git checkout -b $NEW_BRANCH
           git remote add nextcoolrepo https://oauth2:${{ env.GITHUB_TOKEN }}@github.com/OWNER/REPO.git
           git push nextcoolrepo $NEW_BRANCH
-          
+      
       - run: echo "🍏 This job's status is ${{ job.status }}."
