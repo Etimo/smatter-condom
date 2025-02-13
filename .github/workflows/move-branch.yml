@@ -1,0 +1,41 @@
+name: Move-branch-from-condom
+env:
+  DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+run-name: ${{ github.actor }} is pushing a branch onward and then cleaning up
+on:
+  create:
+    branches:
+      - '*'
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      
+      - name: Extract branch name
+        run: echo "BRANCH_NAME=$(echo ${{ github.ref }} | awk -F/ '{print $3}')" >> $GITHUB_ENV
+      
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # avoid shallow clone
+      
+      - name: List files in the repository
+        run: ls ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}
+      
+      - name: Create and push new branch
+        run: |
+          BRANCH_NAME=$(echo ${{ github.ref }} | awk -F/ '{print $3}')
+          echo YOYOYO ${{ env.BRANCH_NAME }}
+          NEW_BRANCH="${{ env.BRANCH_NAME }}-$(date '+%Y%m%d_%H%M%S')"
+          git checkout -b $NEW_BRANCH
+          mkdir -p ~/.ssh
+          echo "${{ env.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          git remote add nextcoolrepo git@github.com:Etimo/smatter-submit.git
+          git push nextcoolrepo $NEW_BRANCH
+          
+      - run: echo "🍏 This job's status is ${{ job.status }}."
