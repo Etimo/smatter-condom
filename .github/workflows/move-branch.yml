@@ -26,13 +26,13 @@ jobs:
       
       - name: Create and push new branch
         run: |
-          git checkout ${{ env.BRANCH_NAME }}
+          BRANCH_NAME=$(echo ${{ github.ref }} | awk -F/ '{print $3}')
+          echo YOYOYO ${{ env.BRANCH_NAME }}
           NEW_BRANCH="${{ env.BRANCH_NAME }}-$(date '+%Y%m%d_%H%M%S')"
           git checkout -b $NEW_BRANCH
           mkdir -p ~/.ssh
           echo "${{ env.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
           git remote add nextcoolrepo git@github.com:Etimo/smatter-submit.git
           git push nextcoolrepo $NEW_BRANCH
           
