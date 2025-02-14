@@ -1,19 +1,17 @@
-name: Move-branch-from-condom
+name: Shuttle branch
 env:
-  DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+  DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }} # SSH private key for pushing to smatter-submit
 run-name: ${{ github.actor }} is pushing a branch onward and then cleaning up
 on:
   create:
     branches:
-      - '**/**/**'
-  workflow_dispatch:  # Allows manual triggering
+      - '**/**/**' # only trigger on branches that follow the /x/y/z pattern (branches created from the smatter-cli follow this pattern). To push actual dev changes to this repository, avoid this pattern. or the branch will be deleted.
+  workflow_dispatch:  # allows manual triggering
 
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
-    steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      
+    steps: 
       - name: Extract branch name
         run: echo "BRANCH_NAME=$(echo ${{ github.ref }} | awk -F'heads/' '{print $2}')" >> $GITHUB_ENV
       
@@ -26,18 +24,16 @@ jobs:
         run: ls ${{ github.workspace }}
         working-directory: ${{ github.workspace }}
       
-      - name: Create and push new branch
+      - name: Create new branch, set up SSH key, push to smatter-submit, delete old branch
         run: |
           BRANCH_NAME=$(echo ${{ github.ref }} | awk -F/ '{print $3}')
-          echo YOYOYO ${{ env.BRANCH_NAME }}
           NEW_BRANCH="${{ env.BRANCH_NAME }}-$(date '+%Y%m%d_%H%M%S')"
           git checkout -b $NEW_BRANCH
           mkdir -p ~/.ssh
           echo "${{ env.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          git remote add nextcoolrepo git@github.com:Etimo/smatter-submit.git
-          git push nextcoolrepo $NEW_BRANCH
-          sleep 10
+          git remote add smatter-submit-remote git@github.com:Etimo/smatter-submit.git
+          git push smatter-submit-remote $NEW_BRANCH 
           git push -d origin ${{ env.BRANCH_NAME }}
           
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - run: echo "Job status: ${{ job.status }}."
