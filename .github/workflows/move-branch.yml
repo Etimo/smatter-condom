@@ -5,7 +5,7 @@ run-name: ${{ github.actor }} is pushing a branch onward and then cleaning up
 on:
   create:
     branches:
-      - '**/**/**' # only trigger on branches that follow the /x/y/z pattern (branches created from the smatter-cli follow this pattern). To push actual dev changes to this repository, avoid this pattern. or the branch will be deleted.
+      - "**/**/**" # only trigger on branches that follow the /x/y/z pattern (branches created from the smatter-cli follow this pattern). To push actual dev changes to this repository, avoid this pattern. or the branch will be deleted.
   workflow_dispatch: # allows manual triggering
 
 jobs:
