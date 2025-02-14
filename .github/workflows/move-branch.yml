@@ -36,4 +36,4 @@ jobs:
           git push smatter-submit-remote $NEW_BRANCH 
           git push -d origin ${{ env.BRANCH_NAME }}
           
-      - run: echo "Job status: ${{ job.status }}."
+      - run: echo "Job status ${{ job.status }}."
